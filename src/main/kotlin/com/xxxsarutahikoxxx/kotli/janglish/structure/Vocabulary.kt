@@ -38,6 +38,33 @@ data class Vocabulary(
     /** 品詞 */
     val parts : List<PartOfSpeech> get() = meanings.keys.toList()
 
+    /** 活用形の存在 */
+    fun has(con : Conjugation) : Boolean = conjugations.containsKey(con)
+    /** 過去形を持つかどうか */
+    val hasPastForm get() = has(Conjugation.Past)
+    /** 過去分詞を持つかどうか */
+    val hasPastParticipleForm get() = has(Conjugation.PastParticiple)
+    /** 現在分詞を持つかどうか */
+    val hasPresentParticipleForm get() = has(Conjugation.PresentParticiple)
+    /** 複数形を持つかどうか */
+    val hasPluralForm get() = has(Conjugation.Plural)
+    /** 三人称単数形を持つかどうか */
+    val hasThirdPersonSingularForm get() = has(Conjugation.ThirdPersonSingular)
+
+    /** 活用の形を取得する */
+    fun form(con : Conjugation) = conjugations[con]
+    /** 過去の形を取得する */
+    val formOfPast get() = form(Conjugation.Past)
+    /** 過去分詞の形を取得する */
+    val formOfPastParticiple get() = form(Conjugation.PastParticiple)
+    /** 現在分詞の形を取得する */
+    val formOfPresentParticiple get() = form(Conjugation.PresentParticiple)
+    /** 複数の形を取得する */
+    val formOfPlural get() = form(Conjugation.Plural)
+    /** 三人称単数の形を取得する */
+    val formOfThirdPersonSingular get() = form(Conjugation.ThirdPersonSingular)
+
+
     fun meaningsOfPart(part : PartOfSpeech) : List<String> {
         return meanings.filterKeys { it in part }
             .map { it.value }.flatten()
