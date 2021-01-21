@@ -5,7 +5,7 @@ import java.lang.RuntimeException
 
 
 /** 品詞 */
-enum class PartOfSpeech(val code : String, icon : String) {
+enum class PartOfSpeech(val code : String, val initial : String) {
     /** 名詞 */
     Noun("名詞", "名"),
     /** 動詞 */
