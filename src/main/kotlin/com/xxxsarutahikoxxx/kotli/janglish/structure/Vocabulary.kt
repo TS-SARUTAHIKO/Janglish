@@ -35,8 +35,10 @@ data class Vocabulary(
     /** 評価値 */
     var evaluation  : Float
 ){
-    /** 品詞 */
+    /** 品詞のリスト */
     val parts : List<PartOfSpeech> get() = meanings.keys.toList()
+    /** トップレベルの品詞のリスト */
+    val majorParts : List<PartOfSpeech> get() = parts.map { it.parent }.distinct()
 
     /** 活用形の存在 */
     fun has(con : Conjugation) : Boolean = conjugations.containsKey(con)

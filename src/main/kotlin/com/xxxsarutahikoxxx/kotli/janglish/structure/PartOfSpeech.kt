@@ -48,6 +48,15 @@ enum class PartOfSpeech(val code : String, icon : String) {
     Others("その他", "その他")
     ;
 
+    val parent : PartOfSpeech get(){
+        return when (this) {
+            in Verb -> Verb
+            in Noun -> Noun
+            in Adjective -> Adjective
+
+            else -> this
+        }
+    }
     operator fun contains( part : PartOfSpeech ) =
         part in when( this ){
             Verb -> listOf(this, IntransitiveVerb, TransitiveVerb, PhrasalVerb)
