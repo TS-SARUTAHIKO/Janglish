@@ -45,6 +45,8 @@ enum class PartOfSpeech(val code : String, val initial : String) {
     PredicativeAdjective("叙述用法", "叙述"),
 
     /** その他 */
+    Core("コア", "コア"),
+    /** その他 */
     Others("その他", "その他")
     ;
 

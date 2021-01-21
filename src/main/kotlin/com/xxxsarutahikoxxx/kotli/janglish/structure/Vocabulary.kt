@@ -7,7 +7,7 @@ data class Vocabulary(
     /** スペル */
     val spell : String,
     /** コア */
-    val core : String,
+    val summary : Map<PartOfSpeech, String>,
     /** 活用形 */
     val conjugations : Map<Conjugation, String>,
     /** 音節 */
@@ -78,7 +78,7 @@ internal class protoVocabulary(
     val spell : String
 ){
     /** コア */
-    var core : String? = null
+    var summary : Map<PartOfSpeech, String> = mapOf()
     /** 活用形 */
     var conjugations : MutableMap<Conjugation, String> = mutableMapOf()
     /** 音節 */
@@ -142,7 +142,7 @@ internal class protoVocabulary(
     val toVoc : Vocabulary get(){
         return Vocabulary(
             spell = spell,
-            core = "",
+            summary = summary,
             conjugations = conjugations,
             syllable = syllable ?: "",
             phonetic = phonetic ?: "",
@@ -166,7 +166,7 @@ internal class protoVocabulary(
 private operator fun Vocabulary.plus(voc : Vocabulary) : Vocabulary {
     return Vocabulary(
         spell = spell,
-        core = core,
+        summary = summary,
         conjugations = conjugations + voc.conjugations,
         syllable = syllable,
         phonetic = phonetic,
