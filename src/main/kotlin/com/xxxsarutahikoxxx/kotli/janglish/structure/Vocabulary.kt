@@ -67,10 +67,13 @@ data class Vocabulary(
     val formOfThirdPersonSingular get() = form(Conjugation.ThirdPersonSingular)
 
 
-    fun meaningsOfPart(part : PartOfSpeech) : List<String> {
-        return meanings.filterKeys { it in part }
-            .map { it.value }.flatten()
-                .map { it.keys }.flatten()
+    /**
+     * 指定した品詞に属する意味を取得する
+     *
+     * ※ 動詞を指定した場合は自動詞や他動詞の意味も含む配列を返す
+     *  */
+    fun meaningsOfPart(part : PartOfSpeech) : List<Map< String, Map<String, String> >> {
+        return meanings.filterKeys { it in part }.map { it.value }.flatten()
     }
 }
 

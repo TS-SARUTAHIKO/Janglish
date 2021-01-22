@@ -1,5 +1,7 @@
 package com.xxxsarutahikoxxx.kotli.janglish
 
+import com.xxxsarutahikoxxx.kotli.janglish.classifier.Eijiro
+import com.xxxsarutahikoxxx.kotli.janglish.classifier.Oxford3000
 import com.xxxsarutahikoxxx.kotli.janglish.parser.Oxford
 import com.xxxsarutahikoxxx.kotli.janglish.parser.Weblio
 import com.xxxsarutahikoxxx.kotli.janglish.structure.PartOfSpeech
@@ -25,6 +27,11 @@ private val Decorations = listOf(
     '〈' to '〉',
     '［' to '］'
 )
+/**
+ * [Decorations]で区切られた部分を除去する
+ *
+ * 区切り文字を統一する
+ * */
 val String.noDecorated : String get(){
     var ret = this
 
@@ -49,24 +56,31 @@ val String.noDecorated : String get(){
         } != null
     }while( loop )
 
+    ret = ret.replace("[,.;，]".toRegex(), " ").replace("  ", " ")
+    ret = ret.split(" ").filter { it.isNotEmpty() }.joinToString(", ")
+
     return ret
 }
 
 
 
+
+
 fun main(args: Array<String>) {
-    val spell = "preservation"
+    val spell = "respect"
 
-    Weblio.parse(spell).run {
-        val pair = Oxford.parse(spell)
-        this.phonetic = pair.first
-        this.resource = pair.second
-
-        this.toVoc
-    }.apply {
-        meaningsOfPart(PartOfSpeech.Noun).forEach {
-            out = it.noDecorated
+    Weblio.parse(spell)
+//        .run {
+//            val pair = Oxford.parse(spell)
+//            this.phonetic = pair.first
+//            this.resource = pair.second
+//
+//            this.toVoc
+//        }
+        .apply {
+            meanings.values.forEach { it.forEach { it.entries.forEach {
+                out = it.key.noDecorated
+            } } }
         }
-    }
 
 }

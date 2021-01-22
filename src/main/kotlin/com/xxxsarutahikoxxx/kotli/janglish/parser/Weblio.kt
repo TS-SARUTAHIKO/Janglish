@@ -3,6 +3,7 @@ package com.xxxsarutahikoxxx.kotli.janglish.parser
 import com.xxxsarutahikoxxx.kotli.janglish.out
 import com.xxxsarutahikoxxx.kotli.janglish.structure.Conjugation
 import com.xxxsarutahikoxxx.kotli.janglish.structure.PartOfSpeech
+import com.xxxsarutahikoxxx.kotli.janglish.structure.Vocabulary
 import com.xxxsarutahikoxxx.kotli.janglish.structure.protoVocabulary
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -11,7 +12,7 @@ import org.jsoup.nodes.Element
 
 object Weblio {
 
-    internal fun parse(spell: String) : protoVocabulary {
+    fun parse(spell: String) : Vocabulary {
         val voc = protoVocabulary(spell)
 
         val document: Document = Jsoup.connect("https://ejje.weblio.jp/content/$spell").get()
@@ -61,7 +62,7 @@ object Weblio {
             }
         }
 
-        return voc
+        return voc.toVoc
     }
 
 }
