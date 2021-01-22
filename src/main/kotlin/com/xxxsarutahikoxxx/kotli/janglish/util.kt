@@ -3,11 +3,16 @@ package com.xxxsarutahikoxxx.kotli.janglish
 import com.xxxsarutahikoxxx.kotli.janglish.parser.Oxford
 import com.xxxsarutahikoxxx.kotli.janglish.parser.Weblio
 import com.xxxsarutahikoxxx.kotli.janglish.structure.PartOfSpeech
-import com.xxxsarutahikoxxx.kotli.janglish.structure.VocabularyMap
 
+var outstream : (Any?)->(Unit) = { println("$it") }
 var out : Any?
     get() = null
-    set(value) { println(value) }
+    set(value) { outstream(value) }
+
+var errorstream : (Any?)->(Unit) = { println("$it") }
+var error : Any?
+    get() = null
+    set(value) { errorstream(value) }
 
 
 private val Decorations = listOf(
