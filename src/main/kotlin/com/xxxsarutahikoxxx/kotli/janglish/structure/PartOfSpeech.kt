@@ -5,7 +5,7 @@ import java.lang.RuntimeException
 
 
 /** 品詞 */
-enum class PartOfSpeech(val code : String, val initial : String) {
+enum class PartOfSpeech(val code : String, val initial : String, val subcode : String = code) {
     /** 名詞 */
     Noun("名詞", "名"),
     /** 動詞 */
@@ -28,21 +28,21 @@ enum class PartOfSpeech(val code : String, val initial : String) {
     Interjection("間投詞", "間"),
 
     /** 自動詞 */
-    IntransitiveVerb("自動詞", "自"),
+    IntransitiveVerb("自動詞", "自", "動詞 [自]"),
     /** 他動詞 */
-    TransitiveVerb("他動詞", "他"),
+    TransitiveVerb("他動詞", "他", "動詞 [他]"),
     /** 句動詞 */
-    PhrasalVerb("句動詞", "句"),
+    PhrasalVerb("句動詞", "句", "動詞 [句]"),
 
     /** 可算名詞 */
-    CountableNoun("可算名詞", "可算"),
+    CountableNoun("可算名詞", "可算", "名詞 [可算]"),
     /** 不可算名詞 */
-    UncountableNoun("不可算名詞", "不可算"),
+    UncountableNoun("不可算名詞", "不可算", "名詞 [不可算]"),
 
     /** 限定用法 */
-    AttributiveAdjective("限定用法", "限定"),
+    AttributiveAdjective("限定用法形容詞", "限定", "形容詞 [限定]"),
     /** 叙述用法 */
-    PredicativeAdjective("叙述用法", "叙述"),
+    PredicativeAdjective("叙述用法形容詞", "叙述", "形容詞 [叙述]"),
 
     /** その他 */
     Core("コア", "コア"),
