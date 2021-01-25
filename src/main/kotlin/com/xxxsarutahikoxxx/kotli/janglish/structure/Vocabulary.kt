@@ -1,42 +1,45 @@
 package com.xxxsarutahikoxxx.kotli.janglish.structure
 
+import com.xxxsarutahikoxxx.kotli.janglish.ListSpan
+import com.xxxsarutahikoxxx.kotli.janglish.TextSpan
+import com.xxxsarutahikoxxx.kotli.janglish.out
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class Vocabulary(
     /** スペル */
-    val spell : String,
+    var spell : String,
     /** コア */
-    val summary : Map<PartOfSpeech, String>,
+    var summary : MutableMap<PartOfSpeech, String>,
     /** 活用形 */
-    val conjugations : Map<Conjugation, String>,
+    var conjugations : MutableMap<Conjugation, String>,
     /** 音節 */
-    val syllable : String,
+    var syllable : MutableList<String>,
     /** 発音記号 */
-    val phonetic : String,
+    var phonetic : MutableList<String>,
     /** 発音リソース */
-    var resource : String? = null,
+    var resource : MutableList<String>,
 
     /** タグ */
-    val tags : List<String>,
+    var tags : MutableList<String>,
 
     /** 句動詞 */
-    val phrasal : Map<String, String>,
+    var phrasal : MutableMap<String, String>,
     /** 類義語 */
-    val synonyms : Map<String, Map<String, String>>,
+    var synonyms : MutableMap<String, MutableMap<String, String>>,
     /** 対義語 */
-    val antonyms : Map<String, Map<String, String>>,
+    var antonyms : MutableMap<String, MutableMap<String, String>>,
     /** 関連語 */
-    val related : Map<String, String>,
+    var related : MutableMap<String, String>,
 
     /** 意味 */
-    val meanings : Map<PartOfSpeech, List<Map< String, Map<String, String> >>>,
+    var meanings : MutableList<PartMeaning>,
 
     /** 評価値 */
-    var evaluation  : Float
+    var evaluation  : Float = 3.0f
 ){
     /** 品詞のリスト */
-    val parts : List<PartOfSpeech> get() = meanings.keys.toList()
+    val parts : List<PartOfSpeech> get() = meanings.map { it.part }
     /** トップレベルの品詞のリスト */
     val majorParts : List<PartOfSpeech> get() = parts.map { it.parent }.distinct()
 
@@ -67,32 +70,47 @@ data class Vocabulary(
     val formOfThirdPersonSingular get() = form(Conjugation.ThirdPersonSingular)
 
 
-    /**
-     * 指定した品詞に属する意味を取得する
-     *
-     * ※ 動詞を指定した場合は自動詞や他動詞の意味も含む配列を返す
-     *  */
-    fun meaningsOfPart(part : PartOfSpeech) : List<Map< String, Map<String, String> >> {
-        return meanings.filterKeys { it in part }.map { it.value }.flatten()
+    /** [part]に属する[FirstMeaning]のリスト */
+    fun meaningsOfMajor(part : PartOfSpeech) : List<FirstMeaning> {
+        val part = part.parent
+        return meanings.filter { it.part in part }.map { it.meanings }.flatten()
     }
 }
+@Serializable
+data class PartMeaning(
+    var part : PartOfSpeech,
+    var partLevel : String = "",
+    var meanings : MutableList<FirstMeaning> = mutableListOf()
+)
+@Serializable
+data class FirstMeaning(
+    var firstLevel : String = "",
+    var meanings : MutableList<SecondMeaning> = mutableListOf()
+)
+@Serializable
+data class SecondMeaning(
+    var secondLevel : String = "",
+    var examples : MutableMap<String /* English */, String /* Japanese */> = mutableMapOf()
+)
 
-internal class protoVocabulary(
-    val spell : String
-){
+// Weblio のページ解析の途中で用いる中継クラス
+internal class ProtoVocabulary_Weblio(spell : String) {
+    /** スペル */
+    var spell : String = spell
     /** コア */
-    var summary : Map<PartOfSpeech, String> = mapOf()
+    var summary : MutableMap<PartOfSpeech, String> = mutableMapOf()
     /** 活用形 */
     var conjugations : MutableMap<Conjugation, String> = mutableMapOf()
     /** 音節 */
-    var syllable : String? = null
+    var syllable : MutableList<String> = mutableListOf()
     /** 発音記号 */
-    var phonetic : String? = null
+    var phonetic : MutableList<String> = mutableListOf()
     /** 発音リソース */
-    var resource : String? = null
+    var resource : MutableList<String> = mutableListOf()
 
     /** タグ */
     var tags : MutableList<String> = mutableListOf()
+
     /** 句動詞 */
     var phrasal : MutableMap<String, String> = mutableMapOf()
     /** 類義語 */
@@ -102,122 +120,157 @@ internal class protoVocabulary(
     /** 関連語 */
     var related : MutableMap<String, String> = mutableMapOf()
 
-    /** 意味 */
-    var meanings : MutableMap<PartOfSpeech, MutableList<MutableMap< String, MutableMap<String, String> >>> = mutableMapOf()
-
-
-//    動詞 他動詞
-//    1 a 〈水分・熱・光などを〉吸収する，吸い上げる[込む].
-//        A sponge absorbs water. 海綿は水を吸収する.
-//      b 〈音・衝撃などを〉消す，やわらげる，緩和する.
-//        absorb shocks 衝撃を吸収する.
-//    2 a 〈思想・学問を〉取り入れる，吸収する，同化する.
-//      b 〈会社・町村などを〉吸収合併する.
-
-    val currentPart get() = meanings.values.last()
-    val currentCategory get() = currentPart.last()
-    val currentMeaning get() = currentCategory.keys.last()
-    val currentExamples get() = currentCategory.values.last()
-
-    fun addNewPart(part : PartOfSpeech){
-//        out = "nP:${part.code}"
-
-        meanings[part] = mutableListOf()
-    }
-    fun addNewCategory(){
-//        out = "nC:"
-
-        currentPart.add(mutableMapOf())
-    }
-    fun addNewMeaning(meaning : String){
-//        out = "nM:$meaning"
-
-        if( currentPart.isEmpty() ) addNewCategory()
-
-        currentCategory[meaning] = mutableMapOf()
-    }
-    fun addNewSentence(sentence : String, translated : String){
-//        out = "nE:$sentence:$translated"
-
-        currentExamples[sentence] = translated
-    }
-
-    val toVoc : Vocabulary get(){
-        return Vocabulary(
-            spell = spell,
-            summary = summary,
-            conjugations = conjugations,
-            syllable = syllable ?: "",
-            phonetic = phonetic ?: "",
-            resource = resource,
-            tags = tags,
-            phrasal = phrasal,
-            synonyms = synonyms,
-            antonyms = antonyms,
-            related = related,
-            meanings = meanings,
-            evaluation = 3f
-        )
-    }
-}
-
-/**
- * 二つの[Vocabulary]を合成する関数
- *
- * TODO : 現状は適当な合成
- * */
-private operator fun Vocabulary.plus(voc : Vocabulary) : Vocabulary {
-    return Vocabulary(
-        spell = spell,
-        summary = summary,
-        conjugations = conjugations + voc.conjugations,
-        syllable = syllable,
-        phonetic = phonetic,
-        resource = resource,
-        tags = tags + voc.tags,
-        phrasal = phrasal + voc.phrasal,
-        synonyms = synonyms + voc.synonyms,
-        antonyms = antonyms + voc.antonyms,
-        related = related + voc.related,
-        meanings = meanings,
-        evaluation = evaluation
-    )
-}
-
-
-object VocabularyMap {
     /**
-     * 単語のアルファベット先頭2文字を分類用のカギとして使用したマップ
-     * */
-    internal val AAMap : MutableMap<String, MutableMap<String, Vocabulary>> = {
-        ('a'..'z').map {
-            val k1 = it
-            ('a'..'z').map { "" + k1 + it }
-        }.flatten().associateWith {
-            mutableMapOf<String, Vocabulary>()
-        }.toMutableMap()
-    }.invoke()
-   /**
-     * マップからボキャブラリーを取得する
-     * */
-    operator fun get(spell : String) : Vocabulary? {
-        val key = (spell + spell).substring(0, 2)
-        return AAMap[key]?.get(spell)
-    }
-    /**
-     * マップにボキャブラリーを追加する
+     * 意味マップ
      *
-     * 既に存在する場合は合成した新たな要素を追加する
+     * 意味が大別される２系統に分かれている場合用
      * */
-    fun put(voc : Vocabulary) : Vocabulary {
-        val key = (voc.spell + voc.spell).substring(0, 2)
-        val still = get(voc.spell)
+    var meaningsMap : MutableMap<String, MutableList<PartMeaning>> = mutableMapOf()
 
-        return if( still != null ){
-            AAMap[key]?.put(voc.spell, voc + still)
-        }else{
-            AAMap[key]?.put(voc.spell, voc)
-        }!!
+    var active : Pair<String, PartOfSpeech> = "" to PartOfSpeech.Others
+        set(value) {
+            meaningsMap.putIfAbsent(value.first, mutableListOf())
+
+            if( meaningsMap[value.first]!!.filter { it.part == value.second }.isEmpty() ){
+                meaningsMap[value.first]!!.add(PartMeaning(part = value.second).apply {
+                    if( activeKey != value.first && activePart == value.second ){
+                        partLevel = activeMeaning.partLevel
+                    }
+                })
+            }
+
+            field = value
+        }
+    val activeKey : String get() = active.first
+    val activePart : PartOfSpeech get() = active.second
+    val activeMeaning : PartMeaning get() = meaningsMap[activeKey]!!.first { it.part == activePart }
+
+
+    /** [ProtoVocabulary_Weblio] -> [Vocabulary] への変換 */
+    val toReal : List<Vocabulary> get(){
+        return meaningsMap.values.map {
+            Vocabulary(spell = spell, summary = summary, conjugations = conjugations, syllable = syllable, phonetic = phonetic,
+                    resource = resource, tags = tags, phrasal = phrasal, synonyms = synonyms, antonyms = antonyms, related = related,
+                    meanings = it
+            ).apply {
+                // First-Level のテキストを調整する
+                allFirstLevel.forEach {
+                    // 特定の名詞を括る
+                    it.firstLevel = it.firstLevel
+                            .replace("^可算名詞".toRegex(), "【可算名詞】")
+                            .replace("^不可算名詞".toRegex(), "【不可算名詞】")
+                }
+                // Second-Level のテキストを調整する
+                allSecondLevel.forEach {
+                    // 特定の名詞を括る
+                    it.secondLevel = it.secondLevel
+                            .replace("^可算名詞".toRegex(), "【可算名詞】")
+                            .replace("^不可算名詞".toRegex(), "【不可算名詞】")
+
+                    // 並び替え・セパレーター文字の統一
+                    val (texts, lists) = ListSpan.parse(it.secondLevel).spans.partition { it is TextSpan }
+                    val text =  texts.joinToString(" ")
+                            .split("[,.:;、，]".toRegex())
+                            .filter { it.isNotBlank() }
+                            .map { it.replace("^ +".toRegex(), "").replace(" +$".toRegex(), "") }
+                            .joinToString(", ")
+                    val list = lists.joinToString("")
+
+                    it.secondLevel = "$text $list"
+                }
+
+                // 【解説】, 【類語】を切り出して移動する
+                val tag = listOf("《★【解説】", "《★【類語】")
+                meanings.forEach {
+                    val list = mutableListOf<String>()
+                    it.meanings.forEach {
+                        val fLevel = it.firstLevel
+                        if( tag.any { it in fLevel } ){
+                            val (rest, main) = ListSpan.parse(it.firstLevel).spans.partition { it is ListSpan && it.open == '《' }
+                            it.firstLevel = main.joinToString("")
+                            list.add(rest.joinToString(""))
+                        }
+
+                        it.meanings.forEach {
+                            val sLevel = it.secondLevel
+                            if( tag.any { it in sLevel } ){
+                                val (rest, main) = ListSpan.parse(it.secondLevel).spans.partition { it is ListSpan && it.open == '《' }
+                                it.secondLevel = main.joinToString("")
+                                list.add(rest.joinToString(""))
+                            }
+                        }
+                    }
+                    it.partLevel = listOf<String>(it.partLevel, *list.toTypedArray()).filter { it.isNotBlank() }.joinToString("\n")
+                }
+
+                // 概要の自動作成
+
+            }
+        }
+    }
+}
+
+
+// Vocabulary
+val Vocabulary.allFirstLevel get() = meanings.map { it.meanings }.flatten()
+val Vocabulary.allSecondLevel get() = allFirstLevel.map { it.meanings }.flatten()
+
+// PartMeaning
+val PartMeaning.isFirstEmpty get() = meanings.isEmpty()
+val PartMeaning.isSecondEmpty get() = meanings.last().meanings.isEmpty()
+
+val PartMeaning.activeFirstLevel : String get() = meanings.last().firstLevel
+val PartMeaning.activeSecondLevel : String get() = meanings.last().meanings.last().secondLevel
+
+fun PartMeaning.addFirstLevel( first : String ){
+    if( ! isFirstEmpty && isSecondEmpty && activeFirstLevel.isNotBlank() ){
+        addSecondLevel(activeFirstLevel)
+        meanings.last().firstLevel = ""
     }
 
+    meanings.add(FirstMeaning(first))
+}
+fun PartMeaning.addSecondLevel( meaning : String ){
+    meanings.last().meanings.add(SecondMeaning(meaning))
+}
+fun PartMeaning.addTranslated( translated : Map<String, String> ){
+    if( isFirstEmpty ){
+        addFirstLevel("")
+        addSecondLevel(partLevel)
+        partLevel = ""
+    }else
+        if( isSecondEmpty ){
+            addSecondLevel(activeFirstLevel)
+            meanings.last().firstLevel = ""
+        }
+
+    meanings.last().meanings.last().examples.putAll(translated)
+}
+
+//
+fun Vocabulary.println(){
+    out = "${spell}"
+    out = "音節 : ${syllable}  発音記号 : ${phonetic}"
+    out = "活用 : ${conjugations}"
+    meanings.forEachIndexed { index, partMeaning ->
+        out = "  ${index+1} : ${partMeaning.part.code} : ${partMeaning.partLevel}"
+        partMeaning.println()
+    }
+}
+fun PartMeaning.println(){
+    meanings.forEachIndexed { index, firstMeaning ->
+        out = "    ${index+1} : ${firstMeaning.firstLevel}"
+        firstMeaning.println()
+    }
+}
+fun FirstMeaning.println(){
+    meanings.forEachIndexed { index, secondMeaning ->
+        out = "      ${'a'+index} : ${secondMeaning.secondLevel}"
+        secondMeaning.println()
+    }
+}
+fun SecondMeaning.println(){
+    examples.forEach {
+        out = "        ${it.key} // ${it.value}"
+    }
 }

@@ -18,8 +18,20 @@ enum class Conjugation(val code : String) {
 
     // 名詞の活用
     /** 複数形 */
-    Plural("複数形")
+    Plural("複数形"),
+
+    // 形容詞・副詞の活用
+    /** 比較級 */
+    Comparative("比較級"),
+    /** 最上級 */
+    Superlative("最上級")
     ;
+
+    val isVerb get() = this in listOf(Past, PastParticiple, PresentParticiple, ThirdPersonSingular)
+    val isNoun get() = this in listOf(Plural)
+    val isAdjective get() = this in listOf(Comparative, Superlative)
+    val isAdverb get() = this in listOf(Comparative, Superlative)
+
 
     companion object {
         fun of(code : String) : Conjugation {

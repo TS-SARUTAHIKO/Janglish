@@ -59,6 +59,10 @@ enum class PartOfSpeech(val code : String, val initial : String, val subcode : S
             else -> this
         }
     }
+    val children : List<PartOfSpeech> get(){
+        return PartOfSpeech.values().filter { it in this }
+    }
+    
     operator fun contains( part : PartOfSpeech ) =
         part in when( this ){
             Verb -> listOf(this, IntransitiveVerb, TransitiveVerb, PhrasalVerb)
@@ -99,6 +103,7 @@ enum class PartOfSpeech(val code : String, val initial : String, val subcode : S
                 else -> { out = code ; throw RuntimeException("$code に体操する品詞が見つかりません") }
             }
         }
+        val majors : List<PartOfSpeech> get() = values().map { it.parent }.distinct()
     }
 }
 
