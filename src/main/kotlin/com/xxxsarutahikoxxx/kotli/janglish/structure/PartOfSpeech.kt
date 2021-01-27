@@ -3,7 +3,6 @@ package com.xxxsarutahikoxxx.kotli.janglish.structure
 import com.xxxsarutahikoxxx.kotli.janglish.out
 import java.lang.RuntimeException
 
-
 /** 品詞 */
 enum class PartOfSpeech(val code : String, val initial : String, val subcode : String = code) {
     /** 名詞 */
@@ -45,10 +44,17 @@ enum class PartOfSpeech(val code : String, val initial : String, val subcode : S
     PredicativeAdjective("叙述用法形容詞", "叙述", "形容詞 [叙述]"),
 
     /** その他 */
-    Core("コア", "コア"),
+    Overview("単語", "単語"),
     /** その他 */
     Others("その他", "その他")
     ;
+
+    val isNoun : Boolean get() = this in Noun
+    val isVerb : Boolean get() = this in Verb
+    val isAdjective : Boolean get() = this in Adjective
+    val isAdverb : Boolean get() = this in Adverb
+
+    val isSpecial : Boolean get() = this in listOf(Overview, Others)
 
     val parent : PartOfSpeech get(){
         return when (this) {

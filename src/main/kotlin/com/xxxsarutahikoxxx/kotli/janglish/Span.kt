@@ -46,6 +46,16 @@ class ListSpan(open : Char?, close : Char?) : Span {
 
         while( index < resource.length ){
             when( resource[index] ){
+                close -> {
+                    // テキスト部分を切り出して保存する
+                    val text = resource.substring(tStart, index)
+                    if( text.isNotEmpty() )_spans.add( TextSpan(text) )
+
+                    // 処理を終了する
+                    index++
+                    tStart = index
+                    break
+                }
                 in opens -> {
                     // テキスト部分を切り出して保存する
                     val text = resource.substring(tStart, index)
@@ -56,16 +66,6 @@ class ListSpan(open : Char?, close : Char?) : Span {
                     _spans.add(span)
                     index = span.parse(resource, index+1, decorations)
                     tStart = index
-                }
-                close -> {
-                    // テキスト部分を切り出して保存する
-                    val text = resource.substring(tStart, index)
-                    if( text.isNotEmpty() )_spans.add( TextSpan(text) )
-
-                    // 処理を終了する
-                    index++
-                    tStart = index
-                    break
                 }
                 else -> { index++ }
             }
