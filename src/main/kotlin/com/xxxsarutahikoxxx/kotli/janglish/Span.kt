@@ -82,7 +82,7 @@ class ListSpan(open : Char?, close : Char?) : Span {
 
     companion object {
         /** [parse]で用いられるデフォルトの修飾子の組み合わせ */
-        var Decorations = mapOf(
+        val Decorations = mutableMapOf(
                 '(' to ')',
                 '[' to ']',
                 '{' to '}',
