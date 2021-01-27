@@ -41,6 +41,15 @@ data class Vocabulary(
     /** トップレベルの品詞のリスト */
     val majorParts : List<PartOfSpeech> get() = parts.map { it.parent }.distinct().filter { ! it.isSpecial }
 
+    /**  */
+    fun hasMajor(part : PartOfSpeech) : Boolean {
+        return part in majorParts
+    }
+    val hasNoun get() = hasMajor(PartOfSpeech.Noun)
+    val hasVerb get() = hasMajor(PartOfSpeech.Verb)
+    val hasAdjective get() = hasMajor(PartOfSpeech.Adjective)
+    val hasAdverb get() = hasMajor(PartOfSpeech.Adverb)
+
     /** 活用形の存在 */
     fun has(con : Conjugation) : Boolean = conjugations.containsKey(con)
     /** 過去形を持つかどうか */
