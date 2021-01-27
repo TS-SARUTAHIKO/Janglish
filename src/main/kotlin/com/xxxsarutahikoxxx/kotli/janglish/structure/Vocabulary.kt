@@ -45,27 +45,35 @@ data class Vocabulary(
     fun has(con : Conjugation) : Boolean = conjugations.containsKey(con)
     /** 過去形を持つかどうか */
     val hasPastForm get() = has(Conjugation.Past)
-    /** 過去分詞を持つかどうか */
+    /** 過去分詞形を持つかどうか */
     val hasPastParticipleForm get() = has(Conjugation.PastParticiple)
-    /** 現在分詞を持つかどうか */
+    /** 現在分詞形を持つかどうか */
     val hasPresentParticipleForm get() = has(Conjugation.PresentParticiple)
-    /** 複数形を持つかどうか */
-    val hasPluralForm get() = has(Conjugation.Plural)
     /** 三人称単数形を持つかどうか */
     val hasThirdPersonSingularForm get() = has(Conjugation.ThirdPersonSingular)
+    /** 複数形を持つかどうか */
+    val hasPluralForm get() = has(Conjugation.Plural)
+    /** 比較級を持つかどうか */
+    val hasComparativeForm get() = has(Conjugation.Comparative)
+    /** 最上級を持つかどうか */
+    val hasSuperlativeForm get() = has(Conjugation.Superlative)
 
-    /** 活用の形を取得する */
+    /** 活用形を取得する */
     fun form(con : Conjugation) = conjugations[con]
-    /** 過去の形を取得する */
+    /** 過去形を取得する */
     val formOfPast get() = form(Conjugation.Past)
-    /** 過去分詞の形を取得する */
+    /** 過去分詞形を取得する */
     val formOfPastParticiple get() = form(Conjugation.PastParticiple)
-    /** 現在分詞の形を取得する */
+    /** 現在分詞形を取得する */
     val formOfPresentParticiple get() = form(Conjugation.PresentParticiple)
-    /** 複数の形を取得する */
-    val formOfPlural get() = form(Conjugation.Plural)
-    /** 三人称単数の形を取得する */
+    /** 三人称単数形を取得する */
     val formOfThirdPersonSingular get() = form(Conjugation.ThirdPersonSingular)
+    /** 複数形を取得する */
+    val formOfPlural get() = form(Conjugation.Plural)
+    /** 比較級を取得する */
+    val formOfComparative get() = form(Conjugation.Comparative)
+    /** 最上級を取得する */
+    val formOfSuperlative get() = form(Conjugation.Superlative)
 
 
     /** [part]に属する[FirstMeaning]のリスト */
