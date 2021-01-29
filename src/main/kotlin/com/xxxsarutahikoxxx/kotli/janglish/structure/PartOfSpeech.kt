@@ -45,14 +45,19 @@ enum class PartOfSpeech(val code : String, val initial : String, val subcode : S
 
     /** その他 */
     Overview("単語", "単語"),
-    /** その他 */
-    Others("その他", "その他")
+    Others("その他", "その他"),
+
+    /**  */
+    Modifier("形態素", "形態素"),
+    Prefix("接頭辞", "接頭辞"),
+    Suffix("接尾辞", "接尾辞")
     ;
 
     val isNoun : Boolean get() = this in Noun
     val isVerb : Boolean get() = this in Verb
     val isAdjective : Boolean get() = this in Adjective
     val isAdverb : Boolean get() = this in Adverb
+    val isModifier : Boolean get() = this in Modifier
 
     val isSpecial : Boolean get() = this in listOf(Overview, Others)
 
@@ -61,6 +66,7 @@ enum class PartOfSpeech(val code : String, val initial : String, val subcode : S
             in Verb -> Verb
             in Noun -> Noun
             in Adjective -> Adjective
+            in Modifier -> Modifier
 
             else -> this
         }
@@ -74,6 +80,7 @@ enum class PartOfSpeech(val code : String, val initial : String, val subcode : S
             Verb -> listOf(this, IntransitiveVerb, TransitiveVerb, PhrasalVerb)
             Noun -> listOf(this, CountableNoun, UncountableNoun)
             Adjective -> listOf(this, AttributiveAdjective, PredicativeAdjective)
+            Modifier -> listOf(this, Prefix, Suffix)
 
             else -> listOf(this)
         }
@@ -102,9 +109,12 @@ enum class PartOfSpeech(val code : String, val initial : String, val subcode : S
 
                 "形容詞" -> Adjective
                 "限定用法", "形容詞限定用法の形容詞" -> AttributiveAdjective
-                "叙述用法", "形容詞叙述用法の形容詞" -> PredicativeAdjective
+                "叙述用法", "形容詞叙述用法の形容詞", "形容詞叙述的用法の形容詞" -> PredicativeAdjective
 
                 "【語源】" -> Others
+
+                "接頭辞", "【接頭辞】" -> Prefix
+                "接尾辞", "【接尾辞】" -> Suffix
 
                 else -> { out = code ; throw RuntimeException("$code に体操する品詞が見つかりません") }
             }

@@ -113,12 +113,6 @@ val Vocabulary.allPartLevel get() = meanings.toList()
 val Vocabulary.allFirstLevel get() = meanings.map { it.firsts }.flatten()
 val Vocabulary.allSecondLevel get() = allFirstLevel.map { it.seconds }.flatten()
 
-// PartMeaning
-val PartMeaning.isFirstEmpty get() = firsts.isEmpty()
-val PartMeaning.isSecondEmpty get() = firsts.last().seconds.isEmpty()
-
-val PartMeaning.activeFirstLevel : String get() = firsts.last().firstLevel
-val PartMeaning.activeSecondLevel : String get() = firsts.last().seconds.last().secondLevel
 
 //
 fun Vocabulary.println(){

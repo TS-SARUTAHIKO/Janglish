@@ -5,6 +5,8 @@ import com.xxxsarutahikoxxx.kotli.janglish.structure.*
 import com.xxxsarutahikoxxx.kotli.janglish.tag.VocabularyTag
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import org.jsoup.nodes.Element
+import java.lang.RuntimeException
 
 
 object Weblio {
@@ -14,7 +16,13 @@ object Weblio {
         return if( document.getElementsByClass("intrst").isNotEmpty() ) document else null
     }
 
-    fun parse(spell: String) : List<Vocabulary> {
+    fun parse(spell : String) : List<Vocabulary> {
+        return if( " " !in spell ) parseVocabulary(spell) else parsePhrasal(spell)
+    }
+    private fun parsePhrasal(spell : String) : List<Vocabulary> {
+        return listOf()
+    }
+    private fun parseVocabulary(spell: String) : List<Vocabulary> {
         val document: Document = getDocument(spell) ?: return listOf()
 
         // 活用を抽出する
@@ -38,80 +46,237 @@ object Weblio {
 
         // 記事要素を抽出する(１ページ内に複数のコンテンツが含まれる場合がある。fast -> [fast 1][fast 2] など)
         val articles = mainBlock?.getElementsByClass("midashigo")?.map { it.nextElementSibling() } ?: listOf()
-        val ret = mutableListOf<Vocabulary>()
+        val sList = mutableListOf<Vocabulary>()
 
         // 記事要素をそれぞれ解析する
-        articles.forEach {
-            val defaultKey = "A"
-            val voc = ProtoVocabulary_Weblio(spell)
+        for(it in articles){
+            val ret = when {
+                it.getElementsByClass("KnenjSub").isNotEmpty() -> parseVocabularyElement(it, level, conjugates)
+                // TODO : 句動詞の場合
+                // TODO : 略語の場合
+                // TODO : 接頭・接尾の場合
+                // TODO : 上記の判定を作る
+                else -> listOf()
+            }
 
-            // Weblio Level を設定する
-            level?.run{ voc.tags.add(weblioLevel(level).name) }
+            // 作成した Vocabulary を格納する
+            sList.addAll(ret)
+        }
 
-            // 音節を抽出する
-            val syllable = (it.getElementsByClass("KejjeOs").firstOrNull()?.text() ?: "")
-                    .split("/")
-            voc.syllable = syllable.toMutableList()
+        return sList
+    }
 
-            // 発音記号を抽出する
-            val phonetics = (it.getElementsByClass("KejjeHt").firstOrNull()?.text() ?: "")
-                    .split("[｜/,]".toRegex())
-                    .map { it.removeSpaceSurrounding }
-                    .filter { it.isNotBlank() }
-                    .distinct()
-            voc.phonetic = phonetics.toMutableList()
+    private fun parseVocabularyElement(it : Element, level : Int?, conjugates : MutableMap<Conjugation, MutableList<String>>) : List<Vocabulary> {
+        val voc = ProtoVocabulary_Weblio()
 
-            // 発音リソースを抽出する
-            val sources = it.getElementsByTag("source").map { it.attr("src") }
-            voc.resource.addAll(sources)
+        // Spell を設定する
+        val spell = it.previousElementSibling().textNodes()[0].text()
+        voc.spell = spell
 
+        // Weblio Level を設定する
+        level?.run{ voc.tags.add(weblioLevel(level).name) }
 
-            // Level 0 or 例文 を抽出する
-            val levels = it.children().filter { it.className() in listOf("level0", "KejjeYr") }
-            levels.forEach {
-                when {
-                    // 品詞の更新
-                    it.getElementsByClass("KnenjSub").isNotEmpty() -> {
-                        val part = it.getElementsByClass("KnenjSub").text().run { PartOfSpeech.of(this) }
-                        voc.active = defaultKey to part
-                    }
-                    // コンテナーの更新・切り替え
-                    it.getElementsByClass("lvlUAH").isNotEmpty() -> {
-                        val key = it.getElementsByClass("lvlUAH").first().text()
-                        voc.active = key to voc.activePart
-                    }
-                    else -> {
-                        val first = it.getElementsByClass("lvlNH").firstOrNull()?.text() ?: ""
-                        val second = it.getElementsByClass("lvlAH").firstOrNull()?.text() ?: ""
-                        val meaning = it.getElementsByClass("lvlB").firstOrNull()?.text() ?: ""
+        // 音節を抽出する
+        val syllable = (it.getElementsByClass("KejjeOs").firstOrNull()?.text() ?: "")
+                .split("/")
+        voc.syllable = syllable.toMutableList()
 
-                        val english = it.getElementsByClass("KejjeYrEn").map { it.text()?:"" }
-                        val japanese = it.getElementsByClass("KejjeYrJp").map { it.text()?:"" }
-                        val translated = english.zip(japanese).toMap()
+        // 発音記号を抽出する
+        val phonetics = (it.getElementsByClass("KejjeHt").firstOrNull()?.text() ?: "")
+                .split("[｜/,]".toRegex())
+                .map { it.removeSpaceSurrounding }
+                .filter { it.isNotBlank() }
+                .distinct()
+        voc.phonetic = phonetics.toMutableList()
+
+        // 発音リソースを抽出する
+        val sources = it.getElementsByTag("source").map { it.attr("src") }
+        voc.resource.addAll(sources)
 
 
-                        //out = "$first : $second : $meaning : $translated"
+        // Level 0 or 例文 を抽出する
+        var activeText = mutableMapOf<Int, String>()
 
-                        when {
-                            // 全てない場合
-                            first.isEmpty() && second.isEmpty() && meaning.isEmpty() && translated.isEmpty() -> {
+        var activePart : PartMeaning? = null
+        var activeFirst : FirstMeaning? = null
+        var activeSecond : SecondMeaning? = null
+        var activeExamples : MutableMap<String, String>? = null
+
+        var activeFirstList = mutableListOf<FirstMeaning>()
+        var activeSecondList = mutableListOf<SecondMeaning>()
+
+        val defaultKey = "A"
+        var aKey = defaultKey
+
+        var partLevels_fromPart = mutableListOf<String>()
+
+
+        fun isFirstEmpty() : Boolean {
+            return activeFirstList.isEmpty()
+        }
+        fun flushSecond(){
+            // ActiveText に Second-Level-Text が設定されているか、例文が存在する場合は Second-Level を構築して使用したデータは消去する
+            if( activeExamples?.isNotEmpty() == true || activeText.containsKey(2) ){
+                if( activeText.isEmpty() ){
+                    out = "$activeFirstList : $activeSecondList"
+                    out = "$activePart : $activeFirst : $activeSecond : $activeText : $activeExamples"
+                }
+
+                val (key, value) = activeText.entries.last()
+                activeText.remove(key)
+
+                if( activeSecond == null ) activeSecond = SecondMeaning()
+                activeSecond?.apply {
+                    secondLevel = value ?: ""
+                    examples = activeExamples ?: mutableMapOf()
+
+                    activeSecondList.add(this)
+                    activeSecond = null
+                }
+
+                activeExamples = mutableMapOf()
+            }
+        }
+        fun flushFirst(){
+            flushSecond()
+
+            if( activeSecondList.isNotEmpty() || activeText.containsKey(1) ){
+                // First-Level テキストに Second-Level テキストが設定されている場合
+                // 意味が一つで単純な場合に発生する (e.g. agreement)
+                if( activeSecondList.isEmpty() && activeText.containsKey(1) ){
+                    activeText[2] = activeText[1]!!
+                    activeText.remove(1)
+                    flushSecond()
+                }
+
+                // First-Level-Text を決定する
+                val value = activeText[1]?.apply { activeText.remove(1) } ?: ""
+
+                // 現在のデータから First-Level を作成してリストに保存する
+                if( activeFirst == null ) activeFirst = FirstMeaning()
+                activeFirst?.apply {
+                    firstLevel = value
+
+                    seconds = activeSecondList
+                    activeSecondList = mutableListOf()
+
+                    activeFirstList.add(this)
+                    activeFirst = null
+                }
+            }
+        }
+        fun flushKey(){
+            flushFirst()
+
+            voc.meaningsMap.putIfAbsent(aKey, mutableListOf())
+
+            if( activeFirstList.isNotEmpty() || activeText.containsKey(0) ){
+                // Part-Level テキストに Second-Level テキストが設定されている場合
+                // 意味が一つで単純な場合に発生する (e.g. asparagus)
+                if( activeFirstList.isEmpty() && activeText.containsKey(0) ){
+                    activeText[2] = activeText[0]!!
+                    activeText.remove(0)
+                    flushFirst()
+                }
+
+                // Part-Level-Text を決定する
+                val value = activeText[0]?.apply { activeText.remove(0) } ?: ""
+
+                activePart?.apply {
+                    partLevel = partLevels_fromPart.append(value)
+
+                    firsts = activeFirstList
+                    activeFirstList = mutableListOf()
+
+                    voc.meaningsMap[aKey]?.add(this)
+                    activePart = PartMeaning(activePart!!.part)
+                }
+            }
+        }
+        fun flushPart(){
+            flushKey()
+
+            partLevels_fromPart = mutableListOf()
+        }
+
+        val levels = it.children().filter { it.className() in listOf("level0", "KejjeYr") }
+        levels.forEach {
+            when {
+                // 品詞の更新
+                it.getElementsByClass("KnenjSub").isNotEmpty() -> {
+                    flushPart()
+
+                    val partText = it.getElementsByClass("KnenjSub").text()
+                    val spans = ListSpan.parse(partText).spans
+
+                    // 品詞名
+                    val part = spans[0].toString().removeSpaceSurrounding
+                    // 品詞の [] などで括られた部分を切り出す
+                    val suffix = spans.subList(1, spans.size).joinToString("")
+
+                    // Active の切り替え
+                    activePart = PartMeaning(PartOfSpeech.of(part))
+                    aKey = defaultKey
+                    // Part-Level-Text の保存
+                    partLevels_fromPart.add(suffix)
+                }
+                // キーの切り替え
+                it.getElementsByClass("lvlUAH").isNotEmpty() -> {
+                    flushKey()
+
+                    val key = it.getElementsByClass("lvlUAH").first().text()
+                    val levelText = it.getElementsByClass("lvlUAB").firstOrNull()?.text() ?: ""
+
+                    // Active の切り替え
+                    aKey = key
+
+                    if( levelText.isNotBlank() ) activeText[0] = levelText
+                }
+                else -> {
+                    val fIndex = it.getElementsByClass("lvlNH").firstOrNull()?.text() ?: ""
+                    val sIndex = it.getElementsByClass("lvlAH").firstOrNull()?.text() ?: ""
+                    val levelText = it.getElementsByClass("lvlB").firstOrNull()?.text() ?: ""
+
+                    val english = it.getElementsByClass("KejjeYrEn").map { it.text()?:"" }
+                    val japanese = it.getElementsByClass("KejjeYrJp").map { it.text()?:"" }
+                    val translated = english.zip(japanese).toMap().toMutableMap()
+
+                    // ※ 例文枠を用いているが英/日形式になっていない場合がある。その場合用の判定として it.className() != "KejjeYr" を用いる
+
+                    when {
+                        // 例文を追加する
+                        it.className() == "KejjeYr" -> {
+                            if( activeExamples == null ) activeExamples = mutableMapOf()
+
+                            if( translated.isEmpty() ) translated[it.text()] = "NaN"
+
+                            activeExamples?.putAll(translated)
+                        }
+
+                        // 全てない場合
+                        fIndex.isEmpty() && sIndex.isEmpty() && levelText.isEmpty() -> {
+                            when {
                                 // 形容詞か副詞の PartLevel-Text で比較級・最上級の情報である場合
-                                if( (voc.activePart.isAdjective || voc.activePart.isAdverb) && voc.activeMeaning.isFirstEmpty && it.text().startsWith("(") ){
-                                    val (conj : Span, rest : List<Span> ) = ListSpan.parse(it.text(), ListSpan.Decorations.toMutableMap().apply { put('/', '/') }).spans.run { this[0] to this.subList(1, this.size) }
+                                ((activePart?.part?.isAdjective == true) || (activePart?.part?.isAdverb == true)) && isFirstEmpty() && it.text().startsWith("(") -> {
+                                    val spans = ListSpan.parse(it.text(), ListSpan.Decorations + ('/' to '/')).spans
+                                    val conj = spans[0]
+                                    val rest = spans.subList(1, spans.size)
 
                                     // 比較級・最上級を取り除いた部分を設定する
-                                    voc.activeMeaning.partLevel = rest.joinToString("")
+                                    rest.joinToString("").let {
+                                        if( it.isNotBlank() ) activeText[0] = it
+                                    }
 
                                     // 活用部分の文字列を切り出す
                                     var text = (conj as ListSpan).spans.filterIsInstance(TextSpan::class.java).joinToString("")
                                     text = text.replace("音節|発音記号・読み方".toRegex(), "")
                                     var (base1 : List<String>, base2 : List<String>) = text.split(";")
-                                        .map { it.removeSpaceSurrounding }
-                                        .filter { "[a-zA-Z‐]".toRegex().matches("${it.getOrNull(0)?:'+'}") }
-                                        .run { (this.getOrNull(0)?:"") to (this.getOrNull(1)?:"") }
-                                        .run {
-                                            this.first.split("[,，]".toRegex()).filter { it.isNotBlank() }.map { it.removeSpaceSurrounding } to this.second.split("[,，]".toRegex()).filter { it.isNotBlank() }.map { it.removeSpaceSurrounding }
-                                        }
+                                            .map { it.removeSpaceSurrounding }
+                                            .filter { "[a-zA-Z‐]".toRegex().matches("${it.getOrNull(0)?:'+'}") }
+                                            .run { (this.getOrNull(0)?:"") to (this.getOrNull(1)?:"") }
+                                            .run {
+                                                this.first.split("[,，]".toRegex()).filter { it.isNotBlank() }.map { it.removeSpaceSurrounding } to this.second.split("[,，]".toRegex()).filter { it.isNotBlank() }.map { it.removeSpaceSurrounding }
+                                            }
                                     var (c1, c2) = base1 to base2
 
                                     //
@@ -169,7 +334,7 @@ object Weblio {
                                     conjugates.putIfAbsent(Conjugation.Superlative, mutableListOf())
 
                                     conjugates[Conjugation.Comparative]?.addAll(listOf(
-                                        *cList.toTypedArray(), *comparative.toTypedArray()
+                                            *cList.toTypedArray(), *comparative.toTypedArray()
                                     ).sortedBy {
                                         listOf(*base1.toTypedArray(), *base2.toTypedArray()).indexOf(it)
                                     })
@@ -182,55 +347,62 @@ object Weblio {
                                     // 重複を除去する
                                     conjugates[Conjugation.Comparative] = conjugates[Conjugation.Comparative]!!.distinct().toMutableList()
                                     conjugates[Conjugation.Superlative] = conjugates[Conjugation.Superlative]!!.distinct().toMutableList()
-                                }else
-                                if( voc.activeMeaning.isFirstEmpty ){
+                                }
+
+                                // [prefix- + xxx] [xxx + -suffix] の形式で由来が表されている場合
+                                ( it.text().removeSpaceSurrounding.surrounding("［", "］") ) -> {
+                                    // TODO : 由来を単語レベルで保存する
+                                }
+                                else -> {
                                     // Part-Level のテキストの場合
-                                    voc.activeMeaning.partLevel = it.text()
+                                    activeText[0] = it.text()
                                 }
                             }
-                            // First / Second / Meaning がある場合
-                            first.isNotEmpty() && second.isNotEmpty() && meaning.isNotEmpty() -> {
-                                voc.activeMeaning.addFirstLevel("")
-                                voc.activeMeaning.addSecondLevel(meaning)
-                            }
-                            // First / Meaning がある場合
-                            first.isNotEmpty() && second.isEmpty() && meaning.isNotEmpty() -> {
-                                voc.activeMeaning.addFirstLevel(meaning)
-                            }
-                            // Second / Meaning がある場合
-                            first.isEmpty() && second.isNotEmpty() && meaning.isNotEmpty() -> {
-                                voc.activeMeaning.addSecondLevel(meaning)
-                            }
-                            // 例文を追加する
-                            translated.isNotEmpty() -> {
-                                voc.activeMeaning.addTranslated( translated )
-                            }
-                            else -> {
-                                out = "Error : Not Match"
-                            }
+                        }
+                        // First-Index / Second-Index / Level-Text がある場合
+                        fIndex.isNotEmpty() && sIndex.isNotEmpty() && levelText.isNotEmpty() -> {
+                            flushFirst()
+
+                            activeFirst = FirstMeaning()
+                            activeSecond = SecondMeaning()
+                            activeText[0] = levelText
+                        }
+                        // First-Index / Level-Text がある場合
+                        fIndex.isNotEmpty() && sIndex.isEmpty() && levelText.isNotEmpty() -> {
+                            flushFirst()
+
+                            activeFirst = FirstMeaning()
+                            activeText[1] = levelText
+                        }
+                        // Second-Index / Level-Text がある場合
+                        fIndex.isEmpty() && sIndex.isNotEmpty() && levelText.isNotEmpty() -> {
+                            flushSecond()
+
+                            activeSecond = SecondMeaning()
+                            activeText[2] = levelText
+                        }
+                        else -> {
+                            out = "Error : Not Match"
                         }
                     }
                 }
             }
-
-            // 作成した Vocabulary を格納する
-            ret.addAll(voc.toReal.map {
-                // 動詞の意味を持つなら動詞の活用を取り込む
-                if( PartOfSpeech.Verb in it.majorParts ) it.conjugations.putAll(conjugates.filterKeys { it.isVerb }.toMutableMap())
-                // 名詞の意味を持つなら名詞の活用を取り込む
-                if( PartOfSpeech.Noun in it.majorParts ) it.conjugations.putAll(conjugates.filterKeys { it.isNoun }.toMutableMap())
-                // 形容詞の意味を持つなら形容詞の活用を取り込む
-                if( PartOfSpeech.Adjective in it.majorParts ) it.conjugations.putAll(conjugates.filterKeys { it.isAdjective }.toMutableMap())
-                // 副詞の意味を持つなら副詞の活用を取り込む
-                if( PartOfSpeech.Adverb in it.majorParts ) it.conjugations.putAll(conjugates.filterKeys { it.isAdverb }.toMutableMap())
-
-                it
-            })
         }
+        flushPart()
 
-        return ret
+        return voc.toReal.map {
+            // 動詞の意味を持つなら動詞の活用を取り込む
+            if( PartOfSpeech.Verb in it.majorParts ) it.conjugations.putAll(conjugates.filterKeys { it.isVerb }.toMutableMap())
+            // 名詞の意味を持つなら名詞の活用を取り込む
+            if( PartOfSpeech.Noun in it.majorParts ) it.conjugations.putAll(conjugates.filterKeys { it.isNoun }.toMutableMap())
+            // 形容詞の意味を持つなら形容詞の活用を取り込む
+            if( PartOfSpeech.Adjective in it.majorParts ) it.conjugations.putAll(conjugates.filterKeys { it.isAdjective }.toMutableMap())
+            // 副詞の意味を持つなら副詞の活用を取り込む
+            if( PartOfSpeech.Adverb in it.majorParts ) it.conjugations.putAll(conjugates.filterKeys { it.isAdverb }.toMutableMap())
+
+            it
+        }
     }
-
 
     private val weblioTag = VocabularyTag.of("Weblio", "Classifier")
     fun weblioLevel(level : Int) : VocabularyTag {
@@ -242,9 +414,9 @@ object Weblio {
 
 
 // Weblio のページ解析の途中で用いる中継クラス
-internal class ProtoVocabulary_Weblio(spell : String) {
+internal class ProtoVocabulary_Weblio() {
     /** スペル */
-    var spell : String = spell
+    var spell : String = ""
     /** コア */
     var summary : MutableMap<PartOfSpeech, String> = mutableMapOf()
     /** 活用形 */
@@ -275,24 +447,6 @@ internal class ProtoVocabulary_Weblio(spell : String) {
      * */
     var meaningsMap : MutableMap<String, MutableList<PartMeaning>> = mutableMapOf()
 
-    var active : Pair<String, PartOfSpeech> = "" to PartOfSpeech.Others
-        set(value) {
-            meaningsMap.putIfAbsent(value.first, mutableListOf())
-
-            if( meaningsMap[value.first]!!.filter { it.part == value.second }.isEmpty() ){
-                meaningsMap[value.first]!!.add(PartMeaning(part = value.second).apply {
-                    if( activeKey != value.first && activePart == value.second ){
-                        partLevel = activeMeaning.partLevel
-                    }
-                })
-            }
-
-            field = value
-        }
-    val activeKey : String get() = active.first
-    val activePart : PartOfSpeech get() = active.second
-    val activeMeaning : PartMeaning get() = meaningsMap[activeKey]!!.first { it.part == activePart }
-
 
     /** [ProtoVocabulary_Weblio] -> [Vocabulary] への変換 */
     val toReal : List<Vocabulary> get(){
@@ -311,32 +465,31 @@ internal class ProtoVocabulary_Weblio(spell : String) {
                 related = related.toMutableMap(),
                 meanings = it
             ).apply {
-                allPartLevel.forEach { it.adjust() }
+                // 特定の文字列を括る関数
+                fun String.reform() : String {
+                    return this.replace("^可算名詞".toRegex(), "【可算名詞】")
+                               .replace(" 可算名詞 ".toRegex(), " 【可算名詞】 ")
+                               .replace("^不可算名詞".toRegex(), "【不可算名詞】")
+                               .replace(" 不可算名詞 ".toRegex(), " 【不可算名詞】 ")
+                               .replace("^限定用法の形容詞".toRegex(), "【限定用法の形容詞】")
+                               .replace(" 限定用法の形容詞 ".toRegex(), " 【限定用法の形容詞】 ")
+                               .replace("^叙述的用法の形容詞".toRegex(), "【叙述的用法の形容詞】")
+                               .replace(" 叙述的用法の形容詞 ".toRegex(), " 【叙述的用法の形容詞】 ")
+                }
 
                 // First-Level のテキストを調整する
                 allFirstLevel.forEach {
-                    // 特定の名詞を括る
-                    it.firstLevel = it.firstLevel
-                        .replace("^可算名詞".toRegex(), "【可算名詞】")
-                        .replace("^不可算名詞".toRegex(), "【不可算名詞】")
-                        .replace("^限定用法の形容詞".toRegex(), "【限定用法の形容詞】")
-                        .replace("^叙述的用法の形容詞".toRegex(), "【叙述的用法の形容詞】")
+                    it.firstLevel = it.firstLevel.reform()
                 }
                 // Second-Level のテキストを調整する
                 allSecondLevel.forEach {
-                    // 特定の名詞を括る
-                    it.secondLevel = it.secondLevel
-                        .replace("^可算名詞".toRegex(), "【可算名詞】")
-                        .replace("^不可算名詞".toRegex(), "【不可算名詞】")
-                        .replace("^限定用法の形容詞".toRegex(), "【限定用法の形容詞】")
-                        .replace("^叙述的用法の形容詞".toRegex(), "【叙述的用法の形容詞】")
+                    it.secondLevel = it.secondLevel.reform()
 
                     // 並び替え・セパレーター文字の統一
                     val (texts, lists) = ListSpan.parse(it.secondLevel).spans.partition { it is TextSpan }
-                    val text =  texts.joinToString(" ")
-                        .split("[,.:;、，]".toRegex())
+                    val text = texts.joinToString(" ")
+                        .split("[,.:;、， ]".toRegex())
                         .filter { it.isNotBlank() }
-                        .map { it.removeSpaceSurrounding }
                         .distinct()
                         .joinToString(", ")
                     val list = lists.joinToString("")
@@ -365,7 +518,7 @@ internal class ProtoVocabulary_Weblio(spell : String) {
                             }
                         }
                     }
-                    it.partLevel = listOf<String>(it.partLevel, *list.toTypedArray()).filter { it.isNotBlank() }.joinToString("\n")
+                    it.partLevel = it.partLevel.split("\n").append(list.joinToString("\n"))
                 }
 
                 // 概要の自動作成
@@ -407,49 +560,6 @@ internal class ProtoVocabulary_Weblio(spell : String) {
                 }
 
                 summary[PartOfSpeech.Overview] = summary.values.joinToString(" / ")
-            }
-        }
-    }
-}
-
-internal fun PartMeaning.addFirstLevel( first : String ){
-    if( ! isFirstEmpty && isSecondEmpty && activeFirstLevel.isNotBlank() ){
-        addSecondLevel(activeFirstLevel)
-        firsts.last().firstLevel = ""
-    }
-
-    firsts.add(FirstMeaning(first))
-}
-internal fun PartMeaning.addSecondLevel( meaning : String ){
-    firsts.last().seconds.add(SecondMeaning(meaning))
-}
-internal fun PartMeaning.addTranslated( translated : Map<String, String> ){
-    if( isFirstEmpty ){
-        addFirstLevel("")
-        addSecondLevel(partLevel)
-        partLevel = ""
-    }else
-        if( isSecondEmpty ){
-            addSecondLevel(activeFirstLevel)
-            firsts.last().firstLevel = ""
-        }
-
-    firsts.last().seconds.last().examples.putAll(translated)
-}
-
-internal fun PartMeaning.adjust(){
-    when {
-        partLevel.isNotBlank() && isFirstEmpty -> {
-            addFirstLevel("")
-            addSecondLevel(partLevel)
-            partLevel = ""
-        }
-    }
-    firsts.forEach {
-        when {
-            it.firstLevel.isNotBlank() && it.seconds.isEmpty() -> {
-                addSecondLevel(it.firstLevel)
-                it.firstLevel = ""
             }
         }
     }
