@@ -72,19 +72,8 @@ fun List<String>.append(str : String) : String {
 
 fun main(args: Array<String>) {
 
-    val spell = when( null ) {
-        0 -> "dangerous"
-        1 -> "make"
-        2 -> "leave"
-        3 -> "respect"
-        4 -> "inspect"
-        5 -> "affect"
-        6 -> "alcohol"
-
-        7 -> "asparagus"
-        8 -> "assistance"
-        9 -> "agreement"
-        10 -> "bitter"
+    val spell = when( 1 ) {
+        1 -> "tiny"
 
         else -> null
     }

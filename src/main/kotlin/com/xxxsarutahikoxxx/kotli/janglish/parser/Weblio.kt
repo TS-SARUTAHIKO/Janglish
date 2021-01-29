@@ -256,13 +256,22 @@ object Weblio {
                         // 全てない場合
                         fIndex.isEmpty() && sIndex.isEmpty() && levelText.isEmpty() -> {
                             when {
+                                // [prefix- + xxx] [xxx + -suffix] の形式で由来が表されている場合
+                                ( it.text().removeSpaceSurrounding.surrounding("［", "］") ) -> {
+                                    // TODO : 由来を単語レベルで保存する
+                                }
+                                // オーディオタグが存在する場合
+                                ( it.getElementsByTag("audio").isNotEmpty() ) -> {
+                                    // TODO : 発音リソースの読み込み
+                                }
+
                                 // 形容詞か副詞の PartLevel-Text で比較級・最上級の情報である場合
                                 ((activePart?.part?.isAdjective == true) || (activePart?.part?.isAdverb == true)) && isFirstEmpty() && it.text().startsWith("(") -> {
                                     val spans = ListSpan.parse(it.text(), ListSpan.Decorations + ('/' to '/')).spans
                                     val conj = spans[0]
                                     val rest = spans.subList(1, spans.size)
 
-                                    // 比較級・最上級を取り除いた部分を設定する
+                                    // 比較級・最上級を取り除いた部分を Part-Level-Text として設定する
                                     rest.joinToString("").let {
                                         if( it.isNotBlank() ) activeText[0] = it
                                     }
@@ -282,7 +291,6 @@ object Weblio {
                                     //
                                     val cList = mutableListOf<String>()
                                     val sList = mutableListOf<String>()
-
 
                                     // more / most の切り出しと保存
                                     c1.filter { it.startsWith("more ") }.apply {
@@ -320,7 +328,7 @@ object Weblio {
                                     superlative = superlative.mapIndexed { index, s ->
                                         if( s.startsWith("‐") ){
                                             val preOfC = comparative[index].split("・").run { subList(0, this.size-1) }
-                                            val sufOfS = s.substring(1, s.length)
+                                            val sufOfS = s.split("・").last()
                                             listOf(*preOfC.toTypedArray(), sufOfS).joinToString("")
                                         }else{
                                             s.replace("・", "")
@@ -349,9 +357,10 @@ object Weblio {
                                     conjugates[Conjugation.Superlative] = conjugates[Conjugation.Superlative]!!.distinct().toMutableList()
                                 }
 
-                                // [prefix- + xxx] [xxx + -suffix] の形式で由来が表されている場合
-                                ( it.text().removeSpaceSurrounding.surrounding("［", "］") ) -> {
-                                    // TODO : 由来を単語レベルで保存する
+
+                                // Part-Level-Text が既に存在する場合は上書きが起きないようにする
+                                ( activeText.containsKey(0) ) -> {
+                                    // TODO :
                                 }
                                 else -> {
                                     // Part-Level のテキストの場合
