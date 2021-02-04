@@ -1,7 +1,10 @@
 package com.xxxsarutahikoxxx.kotli.janglish.structure
 
 import com.xxxsarutahikoxxx.kotli.janglish.out
+import com.xxxsarutahikoxxx.kotli.janglish.tag.TagLibrary
+import com.xxxsarutahikoxxx.kotli.janglish.tag.VocabularyTag
 import kotlinx.serialization.Serializable
+import java.util.*
 
 @Serializable
 data class Vocabulary(
@@ -16,10 +19,10 @@ data class Vocabulary(
     /** 発音記号 */
     var phonetic : MutableList<String>,
     /** 発音リソース */
-    var resource : MutableList<String>,
+    var resource : MutableList<Pronounce>,
 
     /** タグ */
-    var tags : MutableList<String>,
+    var tagCodes : MutableList<String>,
 
     /** 句動詞 */
     var phrasal : MutableMap<String, String>,
@@ -85,6 +88,12 @@ data class Vocabulary(
     val formOfSuperlative get() = form(Conjugation.Superlative)
 
 
+    /** タグをインスタンス化して返却する */
+    val tagInstances : List<VocabularyTag> get(){
+        return tagCodes.mapNotNull { TagLibrary.of(it) }
+    }
+
+
     /** [part]に属する[FirstMeaning]のリスト */
     fun meaningsOfMajor(part : PartOfSpeech) : List<FirstMeaning> {
         val part = part.parent
@@ -108,6 +117,43 @@ data class SecondMeaning(
     var examples : MutableMap<String /* English */, String /* Japanese */> = mutableMapOf()
 )
 
+@Serializable
+data class Pronounce(
+    /** スペル */
+    var spell : String,
+    /** 発音記号 */
+    var phonetic : String,
+    /** リソース */
+    var url : String,
+    /** 分類用タグ */
+    var tags : MutableSet<String> = mutableSetOf()
+){
+    var isAmerican : Boolean
+        get() = Locale.US.toString() in tags
+        set(value) {
+            val key = Locale.US.toString()
+            if( value ){ tags.add(key) }else{ tags.remove(key) }
+        }
+    var isBritish : Boolean
+        get() = Locale.UK.toString() in tags
+        set(value) {
+            val key = Locale.UK.toString()
+            if( value ){ tags.add(key) }else{ tags.remove(key) }
+        }
+    var isOxford : Boolean
+        get() = "Oxford" in tags
+        set(value) {
+            val key = "Oxford"
+            if( value ){ tags.add(key) }else{ tags.remove(key) }
+        }
+    var isWeblio : Boolean
+        get() = "Weblio" in tags
+        set(value) {
+            val key = "Weblio"
+            if( value ){ tags.add(key) }else{ tags.remove(key) }
+        }
+}
+
 // Vocabulary
 val Vocabulary.allPartLevel get() = meanings.toList()
 val Vocabulary.allFirstLevel get() = meanings.map { it.firsts }.flatten()
@@ -119,6 +165,8 @@ fun Vocabulary.println(){
     out = "${spell}"
     out = "音節 : ${syllable}  発音記号 : ${phonetic}"
     out = "活用 : ${conjugations}"
+    out = "タグ : ${tagCodes}"
+    out = "リソース : ${resource}"
     out = "概要 : ${summary}"
     meanings.forEachIndexed { index, partMeaning ->
         out = "  ${index+1} : ${partMeaning.part.code} : ${partMeaning.partLevel}"
@@ -142,3 +190,7 @@ fun SecondMeaning.println(){
         out = "        ${it.key} // ${it.value}"
     }
 }
+
+
+//
+private val weblioTag = TagLibrary.instance("Weblio", "Classifier")

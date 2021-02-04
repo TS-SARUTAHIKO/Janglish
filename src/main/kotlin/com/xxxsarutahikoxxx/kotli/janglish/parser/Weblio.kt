@@ -2,11 +2,11 @@ package com.xxxsarutahikoxxx.kotli.janglish.parser
 
 import com.xxxsarutahikoxxx.kotli.janglish.*
 import com.xxxsarutahikoxxx.kotli.janglish.structure.*
+import com.xxxsarutahikoxxx.kotli.janglish.tag.TagLibrary
 import com.xxxsarutahikoxxx.kotli.janglish.tag.VocabularyTag
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
-import java.lang.RuntimeException
 
 
 object Weblio {
@@ -74,7 +74,7 @@ object Weblio {
         voc.spell = spell
 
         // Weblio Level を設定する
-        level?.run{ voc.tags.add(weblioLevel(level).name) }
+        level?.run{ voc.tagCodes.add(weblioLevel(level).code) }
 
         // 音節を抽出する
         val syllable = (it.getElementsByClass("KejjeOs").firstOrNull()?.text() ?: "")
@@ -91,7 +91,7 @@ object Weblio {
 
         // 発音リソースを抽出する
         val sources = it.getElementsByTag("source").map { it.attr("src") }
-        voc.resource.addAll(sources)
+        voc.resource.add(Pronounce(spell, phonetics.firstOrNull()?:"", sources.firstOrNull()?:"").apply { isWeblio = true })
 
 
         // Level 0 or 例文 を抽出する
@@ -413,11 +413,8 @@ object Weblio {
         }
     }
 
-    private val weblioTag = VocabularyTag.of("Weblio", "Classifier")
     fun weblioLevel(level : Int) : VocabularyTag {
-        val name = "Weblio Lv.$level"
-
-        return VocabularyTag.of(name, "Weblio")
+        return TagLibrary.instance("Weblio Lv.$level", "Weblio")
     }
 }
 
@@ -435,10 +432,10 @@ internal class ProtoVocabulary_Weblio() {
     /** 発音記号 */
     var phonetic : MutableList<String> = mutableListOf()
     /** 発音リソース */
-    var resource : MutableList<String> = mutableListOf()
+    var resource : MutableList<Pronounce> = mutableListOf()
 
     /** タグ */
-    var tags : MutableList<String> = mutableListOf()
+    var tagCodes : MutableList<String> = mutableListOf()
 
     /** 句動詞 */
     var phrasal : MutableMap<String, String> = mutableMapOf()
@@ -467,7 +464,7 @@ internal class ProtoVocabulary_Weblio() {
                 syllable = syllable.toMutableList(),
                 phonetic = phonetic.toMutableList(),
                 resource = resource.toMutableList(),
-                tags = tags.toMutableList(),
+                tagCodes = tagCodes.toMutableList(),
                 phrasal = phrasal.toMutableMap(),
                 synonyms = synonyms.toMutableMap(),
                 antonyms = antonyms.toMutableMap(),
