@@ -4,6 +4,11 @@ import com.xxxsarutahikoxxx.kotli.janglish.*
 import com.xxxsarutahikoxxx.kotli.janglish.structure.*
 import com.xxxsarutahikoxxx.kotli.janglish.tag.TagLibrary
 import com.xxxsarutahikoxxx.kotli.janglish.tag.VocabularyTag
+import com.xxxsarutahikoxxx.kotlin.Span.ListSpan
+import com.xxxsarutahikoxxx.kotlin.Span.TextSpan
+import com.xxxsarutahikoxxx.kotlin.Utilitys.isSurrounded
+import com.xxxsarutahikoxxx.kotlin.Utilitys.out
+import com.xxxsarutahikoxxx.kotlin.Utilitys.removeSpaceSurrounding
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -257,7 +262,7 @@ object Weblio {
                         fIndex.isEmpty() && sIndex.isEmpty() && levelText.isEmpty() -> {
                             when {
                                 // [prefix- + xxx] [xxx + -suffix] の形式で由来が表されている場合
-                                ( it.text().removeSpaceSurrounding.surrounding("［", "］") ) -> {
+                                ( it.text().removeSpaceSurrounding.isSurrounded("［", "］") ) -> {
                                     // TODO : 由来を単語レベルで保存する
                                 }
                                 // オーディオタグが存在する場合

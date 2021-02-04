@@ -1,6 +1,6 @@
 package com.xxxsarutahikoxxx.kotli.janglish.structure
 
-import com.xxxsarutahikoxxx.kotli.janglish.out
+import com.xxxsarutahikoxxx.kotlin.Utilitys.out
 import com.xxxsarutahikoxxx.kotli.janglish.tag.TagLibrary
 import com.xxxsarutahikoxxx.kotli.janglish.tag.VocabularyTag
 import kotlinx.serialization.Serializable

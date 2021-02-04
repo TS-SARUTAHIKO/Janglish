@@ -1,6 +1,5 @@
 package com.xxxsarutahikoxxx.kotli.janglish.parser
 
-import com.xxxsarutahikoxxx.kotli.janglish.out
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 

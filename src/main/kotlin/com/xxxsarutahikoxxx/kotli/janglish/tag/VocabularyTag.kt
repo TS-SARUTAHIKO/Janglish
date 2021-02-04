@@ -77,7 +77,7 @@ data class TagLibrary(
         /**
          * [tagCode] 出死体されたタグの子タグのリストを取得する
          *  */
-        fun childOf(tagCode : String) : List<VocabularyTag> {
+        fun childOf(tagCode : String? = null) : List<VocabularyTag> {
             return library.tags.filter { it.code == tagCode }
         }
     }

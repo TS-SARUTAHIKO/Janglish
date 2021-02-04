@@ -1,6 +1,6 @@
 package com.xxxsarutahikoxxx.kotli.janglish.structure
 
-import com.xxxsarutahikoxxx.kotli.janglish.out
+import com.xxxsarutahikoxxx.kotlin.Utilitys.out
 import java.lang.RuntimeException
 
 /** 品詞 */

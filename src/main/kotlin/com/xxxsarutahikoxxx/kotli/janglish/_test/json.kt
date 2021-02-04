@@ -1,7 +1,7 @@
 package com.xxxsarutahikoxxx.kotli.janglish._test
 
-import com.xxxsarutahikoxxx.kotli.janglish.out
 import com.xxxsarutahikoxxx.kotli.janglish.structure.Sentence
+import com.xxxsarutahikoxxx.kotlin.Utilitys.out
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
