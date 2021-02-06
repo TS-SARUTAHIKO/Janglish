@@ -9,9 +9,6 @@ version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
-}
-repositories {
-    mavenCentral()
     maven { url 'https://github.com/TS-SARUTAHIKO/KotlinLibrary/raw/master/repository/' }
 }
 
@@ -21,7 +18,7 @@ dependencies {
 
     implementation 'org.jsoup:jsoup:1.13.1'
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-core:1.0.0-RC"
-    implementation 'com.xxxsarutahikoxxx.kotlin:KotlinLibrary:1.1.15'
+    implementation 'com.xxxsarutahikoxxx.kotlin:KotlinLibrary:1.1.18'
 }
 
 compileKotlin {
@@ -32,7 +29,7 @@ compileTestKotlin {
 }
 
 
-def versionName = "0.0.18"
+def versionName = "0.0.19"
 def repo = new File(rootDir, "repository")
 
 apply plugin: 'maven'
