@@ -7,6 +7,7 @@ import com.xxxsarutahikoxxx.kotli.janglish.structure.VocLibrary
 import com.xxxsarutahikoxxx.kotli.janglish.structure.Vocabulary
 import com.xxxsarutahikoxxx.kotli.janglish.structure.println
 import com.xxxsarutahikoxxx.kotli.janglish.tag.TagLibrary
+import com.xxxsarutahikoxxx.kotlin.Utilitys.getResourceAsStream
 import com.xxxsarutahikoxxx.kotlin.Utilitys.out
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
@@ -15,15 +16,6 @@ import kotlinx.serialization.json.Json
 import java.io.*
 import java.lang.RuntimeException
 import javax.swing.JFrame
-
-
-private class Loader {
-    companion object {
-        fun getResourceAsStream(name : String) : InputStream =
-                Loader::class.java.getResourceAsStream("/$name")
-    }
-}
-fun getResourceAsStream(name : String) = Loader.getResourceAsStream(name)
 
 
 @Serializable

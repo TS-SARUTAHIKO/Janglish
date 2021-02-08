@@ -99,6 +99,8 @@ data class Vocabulary(
         val part = part.parent
         return meanings.filter { it.part in part }.map { it.firsts }.flatten()
     }
+
+    companion object
 }
 @Serializable
 data class PartMeaning(

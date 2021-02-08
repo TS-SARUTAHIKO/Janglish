@@ -23,6 +23,12 @@ abstract class VocLibrary {
     operator fun get(spell : String) : List<Vocabulary> {
         return VocabularyMap[spell.key]?.filter { it.spell == spell }?.toList() ?: listOf()
     }
+    /**
+     * 条件を指定してボキャブラリーを取得する
+     * */
+    fun get(condition : Condition ) : List<Vocabulary> {
+        return VocabularyMap.values.map { it.filter(condition) }.flatten()
+    }
 
     /**
      * マップに追加する
@@ -60,8 +66,14 @@ abstract class VocLibrary {
             }
         }
 
-        fun of(spell : String) : List<Vocabulary> = library[spell]
         fun add(voc : Vocabulary) = library.add(voc)
+        fun of(spell : String) : List<Vocabulary> = library[spell]
+        /**
+         * ミキサーを用いてボキャブラリーを取得する
+         * */
+        fun get( func : VocabularyMixer.()->(Condition) ) : List<Vocabulary> {
+            return library.get( VocabularyMixer.condition(func) )
+        }
     }
 }
 
