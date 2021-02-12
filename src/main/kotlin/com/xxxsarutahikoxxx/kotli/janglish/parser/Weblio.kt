@@ -46,6 +46,20 @@ object Weblio {
         // レベルを抽出する
         val level = document.getElementsByClass("learning-level-content").firstOrNull()?.text()?.run { Integer.parseInt(this) }
 
+        // 音節を抽出する
+        val syllable = (document.getElementsByClass("syllableEjje").firstOrNull()?.text() ?: "")
+                .split("/")
+                .map { it.replace("\\(米国英語\\)|\\(英国英語\\)".toRegex(), "").removeSpaceSurrounding }
+                .filter { it.isNotBlank() && ! it.startsWith("-") && ! it.endsWith("-") }
+                .distinct()
+
+        // 発音記号を抽出する
+        val phonetics = (document.getElementsByClass("phoneticEjjeWrp").firstOrNull()?.text() ?: "")
+                .split("[｜/,]".toRegex())
+                .map { it.replace("\\(米国英語\\)|\\(英国英語\\)".toRegex(), "").removeSpaceSurrounding }
+                .filter { it.isNotBlank() && ! it.startsWith("-") && ! it.endsWith("-") }
+                .distinct()
+
         // 研究社のブロックを抽出する
         val mainBlock = document.getElementsByClass("mainBlock hlt_KENEJ")?.first()
 
@@ -56,7 +70,7 @@ object Weblio {
         // 記事要素をそれぞれ解析する
         for(it in articles){
             val ret = when {
-                it.getElementsByClass("KnenjSub").isNotEmpty() -> parseVocabularyElement(it, level, conjugates)
+                it.getElementsByClass("KnenjSub").isNotEmpty() -> parseVocabularyElement(it, level, conjugates, syllable, phonetics)
                 // TODO : 句動詞の場合
                 // TODO : 略語の場合
                 // TODO : 接頭・接尾の場合
@@ -71,7 +85,7 @@ object Weblio {
         return sList
     }
 
-    private fun parseVocabularyElement(it : Element, level : Int?, conjugates : MutableMap<Conjugation, MutableList<String>>) : List<Vocabulary> {
+    private fun parseVocabularyElement(it : Element, level : Int?, conjugates : MutableMap<Conjugation, MutableList<String>>, bSyllable : List<String>, bPhonetics : List<String>) : List<Vocabulary> {
         val voc = ProtoVocabulary_Weblio()
 
         // Spell を設定する
@@ -84,15 +98,20 @@ object Weblio {
         // 音節を抽出する
         val syllable = (it.getElementsByClass("KejjeOs").firstOrNull()?.text() ?: "")
                 .split("/")
-        voc.syllable = syllable.toMutableList()
+                .map { it.replace("\\(米国英語\\)|\\(英国英語\\)".toRegex(), "").removeSpaceSurrounding }
+                .filter { it.isNotBlank() && ! it.startsWith("-") && ! it.endsWith("-") }
+                .distinct()
+        voc.syllable = setOf(*bSyllable.toTypedArray(), *syllable.toTypedArray()).toMutableList()
 
         // 発音記号を抽出する
         val phonetics = (it.getElementsByClass("KejjeHt").firstOrNull()?.text() ?: "")
                 .split("[｜/,]".toRegex())
-                .map { it.removeSpaceSurrounding }
-                .filter { it.isNotBlank() }
+                .map { it.replace("\\(米国英語\\)|\\(英国英語\\)".toRegex(), "").removeSpaceSurrounding }
+                .filter { it.isNotBlank() && ! it.startsWith("-") && ! it.endsWith("-") }
                 .distinct()
-        voc.phonetic = phonetics.toMutableList()
+        voc.phonetic = setOf(*bPhonetics.toTypedArray(), *phonetics.toTypedArray()).toMutableList()
+
+        out = voc.phonetic
 
         // 発音リソースを抽出する
         val sources = it.getElementsByTag("source").map { it.attr("src") }

@@ -22,10 +22,16 @@ class VocabularyMixer private constructor(){
 
 
     // 組み込み条件オブジェクト
-    fun contains(str : String) : Condition = { str == it.spell }
+    fun contains(str : String) : Condition = { str in it.spell }
     fun match(str : String) : Condition = { str == it.spell }
     fun prefix(str : String) : Condition = { it.spell.startsWith(str) }
     fun suffix(str : String) : Condition = { it.spell.endsWith(str) }
+
+    fun pContains(str : String) : Condition = { str in it.phonetic.firstOrNull() ?:"" }
+    fun pMatch(str : String) : Condition = { str == it.phonetic.firstOrNull() ?:"" }
+    fun pPrefix(str : String) : Condition = { it.phonetic.firstOrNull()?.startsWith(str) ?: false }
+    fun pSuffix(str : String) : Condition = { it.phonetic.firstOrNull()?.endsWith(str) ?: false }
+
 
 
     companion object {

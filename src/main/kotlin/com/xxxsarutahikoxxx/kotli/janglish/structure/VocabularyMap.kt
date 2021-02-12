@@ -68,14 +68,17 @@ abstract class VocLibrary {
 
         fun add(voc : Vocabulary) = library.add(voc)
         fun of(spell : String) : List<Vocabulary> = library[spell]
-        /**
-         * ミキサーを用いてボキャブラリーを取得する
-         * */
-        fun get( func : VocabularyMixer.()->(Condition) ) : List<Vocabulary> {
-            return library.get( VocabularyMixer.condition(func) )
-        }
+        fun get( condition : Condition ) : List<Vocabulary> = library.get(condition)
     }
 }
+
+/**
+ * ミキサーを用いてボキャブラリーを取得する
+ * */
+fun VocLibrary( func : VocabularyMixer.()->(Condition) ) : List<Vocabulary> {
+    return VocLibrary.get( VocabularyMixer.condition(func) )
+}
+
 
 @Serializable
 data class VocMapImpl(

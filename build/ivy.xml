@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ivy-module version="2.0" xmlns:m="http://ant.apache.org/ivy/maven">
-  <info organisation="org.example" module="Janglish" revision="1.0-SNAPSHOT" status="integration" publication="20210208153009"/>
+  <info organisation="org.example" module="Janglish" revision="1.0-SNAPSHOT" status="integration" publication="20210212230450"/>
   <configurations>
     <conf name="-api" visibility="public" extends="apiElements"/>
     <conf name="-runtime" visibility="public" extends="runtimeElements"/>

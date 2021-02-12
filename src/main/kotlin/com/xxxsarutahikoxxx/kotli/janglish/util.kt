@@ -3,9 +3,7 @@ package com.xxxsarutahikoxxx.kotli.janglish
 import com.xxxsarutahikoxxx.kotli.janglish.classifier.Eijiro
 import com.xxxsarutahikoxxx.kotli.janglish.directory.TagNodeLibrary
 import com.xxxsarutahikoxxx.kotli.janglish.parser.Weblio
-import com.xxxsarutahikoxxx.kotli.janglish.structure.VocLibrary
-import com.xxxsarutahikoxxx.kotli.janglish.structure.Vocabulary
-import com.xxxsarutahikoxxx.kotli.janglish.structure.println
+import com.xxxsarutahikoxxx.kotli.janglish.structure.*
 import com.xxxsarutahikoxxx.kotli.janglish.tag.TagLibrary
 import com.xxxsarutahikoxxx.kotlin.Utilitys.getResourceAsStream
 import com.xxxsarutahikoxxx.kotlin.Utilitys.out
@@ -72,12 +70,12 @@ fun main(args: Array<String>) {
 //
 //
 //
-    val spell = when( 1 ) {
-        1 -> "assign"
+    val spell = when( null ) {
+        1 -> "ballpoint"
         else -> null
     }
     if( spell == null ){
-        Eijiro.List_Lv5/*.shuffled()*/.subList(prop.ListIndex?.second ?: 0, 200).forEachIndexed { index, spell ->
+        Eijiro.List_Lv5/*.shuffled()*/.subList(prop.ListIndex?.second ?: 0, 100).forEachIndexed { index, spell ->
             out = spell
             prop.ListIndex = spell to index
 
@@ -85,6 +83,7 @@ fun main(args: Array<String>) {
             Thread.sleep(2000)
         }
         prop.ListIndex = null
+        out = VocLibrary.libraryCode
     }else{
         Weblio
             .parse(spell!!)
@@ -97,15 +96,8 @@ fun main(args: Array<String>) {
     }
 
 
-    getResourceAsStream("weblio5_200.txt").use {
-        it.bufferedReader().use {
-            VocLibrary.loadLibraryCode(it.readText())
-        }
+    val texts = getResourceAsStream("PhoneticSymbol.json").use {
+        it.bufferedReader().readText()
     }
-
-
-    JFrame().apply {
-        defaultCloseOperation = JFrame.EXIT_ON_CLOSE
-        isVisible = true
-    }
+    out = Json {  }.decodeFromString<List<PhoneticSymbol>>(texts)
 }
