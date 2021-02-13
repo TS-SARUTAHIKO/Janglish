@@ -70,19 +70,17 @@ fun main(args: Array<String>) {
 //
 //
 //
-//
-//    val code = getResourceAsStream("weblio5_sample.txt").bufferedReader().readText()
-//    VocLibrary.loadLibraryCode(code)
-//    VocLibrary { match("break") }.forEach { it.println() }
-//
+
+
 
     val spell = when( null ) {
         1 -> "break"
+        2 -> "ballpoint"
         else -> null
     }
     if( spell == null ){
         Eijiro.List_Lv5/*.shuffled()*/.subList(prop.ListIndex?.second ?: 0, 100).forEachIndexed { index, spell ->
-            out = spell
+            out = "index : $spell"
             prop.ListIndex = spell to index
 
             Weblio.parse(spell).forEach { VocLibrary.add(it) ; it.println() }
@@ -97,9 +95,9 @@ fun main(args: Array<String>) {
                 out = "単語 : ${index+1}"
 
                 VocLibrary.add(it)
-//
-//                val string = Json.encodeToString(it)
-//                Json.decodeFromString<Vocabulary>(string).println()
+
+                val string = Json.encodeToString(it)
+                Json.decodeFromString<Vocabulary>(string).println()
             }
         val code = VocLibrary.libraryCode
         VocLibrary { prefix("break") }.forEach {
