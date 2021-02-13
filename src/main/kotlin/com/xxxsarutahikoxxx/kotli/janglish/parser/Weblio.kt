@@ -50,21 +50,24 @@ object Weblio {
         val syllable = (document.getElementsByClass("syllableEjje").firstOrNull()?.text() ?: "")
                 .split("/")
                 .map { it.replace("\\(米国英語\\)|\\(英国英語\\)".toRegex(), "").removeSpaceSurrounding }
-                .filter { it.isNotBlank() && ! it.startsWith("-") && ! it.endsWith("-") }
+                .filter { it.isNotBlank() }
                 .distinct()
 
         // 発音記号を抽出する
         val phonetics = (document.getElementsByClass("phoneticEjjeWrp").firstOrNull()?.text() ?: "")
                 .split("[｜/,]".toRegex())
                 .map { it.replace("\\(米国英語\\)|\\(英国英語\\)".toRegex(), "").removeSpaceSurrounding }
-                .filter { it.isNotBlank() && ! it.startsWith("-") && ! it.endsWith("-") }
+                .filter { it.isNotBlank() }
                 .distinct()
 
         // 研究社のブロックを抽出する
         val mainBlock = document.getElementsByClass("mainBlock hlt_KENEJ")?.first()
 
         // 記事要素を抽出する(１ページ内に複数のコンテンツが含まれる場合がある。fast -> [fast 1][fast 2] など)
-        val articles = mainBlock?.getElementsByClass("midashigo")?.map { it.nextElementSibling() } ?: listOf()
+        val articles = mainBlock
+                ?.getElementsByClass("midashigo")
+                ?.filter { it.attr("title") == spell }
+                ?.map { it.nextElementSibling() } ?: listOf()
         val sList = mutableListOf<Vocabulary>()
 
         // 記事要素をそれぞれ解析する
@@ -99,7 +102,7 @@ object Weblio {
         val syllable = (it.getElementsByClass("KejjeOs").firstOrNull()?.text() ?: "")
                 .split("/")
                 .map { it.replace("\\(米国英語\\)|\\(英国英語\\)".toRegex(), "").removeSpaceSurrounding }
-                .filter { it.isNotBlank() && ! it.startsWith("-") && ! it.endsWith("-") }
+                .filter { it.isNotBlank() }
                 .distinct()
         voc.syllable = setOf(*bSyllable.toTypedArray(), *syllable.toTypedArray()).toMutableList()
 
@@ -107,11 +110,9 @@ object Weblio {
         val phonetics = (it.getElementsByClass("KejjeHt").firstOrNull()?.text() ?: "")
                 .split("[｜/,]".toRegex())
                 .map { it.replace("\\(米国英語\\)|\\(英国英語\\)".toRegex(), "").removeSpaceSurrounding }
-                .filter { it.isNotBlank() && ! it.startsWith("-") && ! it.endsWith("-") }
+                .filter { it.isNotBlank() }
                 .distinct()
         voc.phonetic = setOf(*bPhonetics.toTypedArray(), *phonetics.toTypedArray()).toMutableList()
-
-        out = voc.phonetic
 
         // 発音リソースを抽出する
         val sources = it.getElementsByTag("source").map { it.attr("src") }
@@ -288,6 +289,10 @@ object Weblio {
                                 ( it.getElementsByTag("audio").isNotEmpty() ) -> {
                                     // TODO : 発音リソースの読み込み
                                 }
+                                //
+                                ( it.text().endsWith("詞") ) -> {
+                                    // TODO : 名詞・動詞・形容詞の関連語の場合
+                                }
 
                                 // 形容詞か副詞の PartLevel-Text で比較級・最上級の情報である場合
                                 ((activePart?.part?.isAdjective == true) || (activePart?.part?.isAdverb == true)) && isFirstEmpty() && it.text().startsWith("(") -> {
@@ -380,7 +385,6 @@ object Weblio {
                                     conjugates[Conjugation.Comparative] = conjugates[Conjugation.Comparative]!!.distinct().toMutableList()
                                     conjugates[Conjugation.Superlative] = conjugates[Conjugation.Superlative]!!.distinct().toMutableList()
                                 }
-
 
                                 // Part-Level-Text が既に存在する場合は上書きが起きないようにする
                                 ( activeText.containsKey(0) ) -> {

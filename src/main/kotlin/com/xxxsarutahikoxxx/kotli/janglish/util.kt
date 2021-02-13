@@ -70,8 +70,14 @@ fun main(args: Array<String>) {
 //
 //
 //
+//
+//    val code = getResourceAsStream("weblio5_sample.txt").bufferedReader().readText()
+//    VocLibrary.loadLibraryCode(code)
+//    VocLibrary { match("break") }.forEach { it.println() }
+//
+
     val spell = when( null ) {
-        1 -> "ballpoint"
+        1 -> "break"
         else -> null
     }
     if( spell == null ){
@@ -90,14 +96,20 @@ fun main(args: Array<String>) {
             .forEachIndexed { index : Int, it ->
                 out = "単語 : ${index+1}"
 
-                val string = Json.encodeToString(it)
-                Json.decodeFromString<Vocabulary>(string).println()
+                VocLibrary.add(it)
+//
+//                val string = Json.encodeToString(it)
+//                Json.decodeFromString<Vocabulary>(string).println()
             }
+        val code = VocLibrary.libraryCode
+        VocLibrary { prefix("break") }.forEach {
+            it.println()
+        }
     }
 
 
-    val texts = getResourceAsStream("PhoneticSymbol.json").use {
-        it.bufferedReader().readText()
-    }
-    out = Json {  }.decodeFromString<List<PhoneticSymbol>>(texts)
+//    val texts = getResourceAsStream("PhoneticSymbol.json").use {
+//        it.bufferedReader().readText()
+//    }
+//    out = Json {  }.decodeFromString<List<PhoneticSymbol>>(texts)
 }
