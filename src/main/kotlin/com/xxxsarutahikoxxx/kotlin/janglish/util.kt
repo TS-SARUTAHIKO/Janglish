@@ -1,11 +1,15 @@
 package com.xxxsarutahikoxxx.kotlin.janglish
 
+import com.xxxsarutahikoxxx.kotli.janglish.directory.TagNodeLibrary
+import com.xxxsarutahikoxxx.kotlin.Utilitys.getResourceAsStream
 import com.xxxsarutahikoxxx.kotlin.janglish.classifier.Eijiro
 import com.xxxsarutahikoxxx.kotlin.janglish.parser.Weblio
 import com.xxxsarutahikoxxx.kotlin.Utilitys.out
 import com.xxxsarutahikoxxx.kotlin.janglish.structure.VocLibrary
 import com.xxxsarutahikoxxx.kotlin.janglish.structure.Vocabulary
 import com.xxxsarutahikoxxx.kotlin.janglish.structure.println
+import com.xxxsarutahikoxxx.kotlin.janglish.tag.TagLibrary
+import com.xxxsarutahikoxxx.kotlin.janglish.tag.tagTemplete
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
