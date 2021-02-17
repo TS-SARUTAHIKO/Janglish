@@ -1,7 +1,5 @@
 package com.xxxsarutahikoxxx.kotlin.janglish.parser
 
-import com.xxxsarutahikoxxx.kotli.janglish.*
-import com.xxxsarutahikoxxx.kotli.janglish.structure.*
 import com.xxxsarutahikoxxx.kotlin.janglish.tag.TagLibrary
 import com.xxxsarutahikoxxx.kotlin.janglish.tag.VocabularyTag
 import com.xxxsarutahikoxxx.kotlin.Span.ListSpan

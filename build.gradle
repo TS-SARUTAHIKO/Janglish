@@ -18,7 +18,7 @@ dependencies {
 
     implementation 'org.jsoup:jsoup:1.13.1'
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-core:1.0.0-RC"
-    implementation 'com.xxxsarutahikoxxx.kotlin:KotlinLibrary:1.1.20'
+    implementation 'com.xxxsarutahikoxxx.kotlin:KotlinLibrary:1.1.25'
 }
 
 compileKotlin {
@@ -29,7 +29,7 @@ compileTestKotlin {
 }
 
 
-def versionName = "0.0.25"
+def versionName = "0.0.26"
 def repo = new File(rootDir, "repository")
 
 apply plugin: 'maven'

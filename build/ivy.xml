@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ivy-module version="2.0" xmlns:m="http://ant.apache.org/ivy/maven">
-  <info organisation="org.example" module="Janglish" revision="1.0-SNAPSHOT" status="integration" publication="20210217221720"/>
+  <info organisation="org.example" module="Janglish" revision="1.0-SNAPSHOT" status="integration" publication="20210217235921"/>
   <configurations>
     <conf name="-api" visibility="public" extends="apiElements"/>
     <conf name="-runtime" visibility="public" extends="runtimeElements"/>
@@ -52,7 +52,7 @@
     <dependency org="org.jetbrains.kotlin" name="kotlin-stdlib-jdk8" rev="1.4.10" conf="implementation-&gt;default"/>
     <dependency org="org.jsoup" name="jsoup" rev="1.13.1" conf="implementation-&gt;default"/>
     <dependency org="org.jetbrains.kotlinx" name="kotlinx-serialization-core" rev="1.0.0-RC" conf="implementation-&gt;default"/>
-    <dependency org="com.xxxsarutahikoxxx.kotlin" name="KotlinLibrary" rev="1.1.20" conf="implementation-&gt;default"/>
+    <dependency org="com.xxxsarutahikoxxx.kotlin" name="KotlinLibrary" rev="1.1.25" conf="implementation-&gt;default"/>
     <dependency org="org.jetbrains.kotlin" name="kotlin-compiler-embeddable" rev="1.4.10" conf="kotlinCompilerClasspath-&gt;default"/>
     <dependency org="org.jetbrains.kotlin" name="kotlin-scripting-compiler-embeddable" rev="1.4.10" conf="kotlinCompilerPluginClasspath-&gt;default"/>
     <dependency org="org.jetbrains.kotlin" name="kotlin-serialization" rev="1.4.10" conf="kotlinCompilerPluginClasspath-&gt;default"/>
