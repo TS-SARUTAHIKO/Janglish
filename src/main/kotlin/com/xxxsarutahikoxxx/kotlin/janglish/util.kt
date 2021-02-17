@@ -65,7 +65,7 @@ fun main(args: Array<String>) {
         else -> null
     }
     if( spell == null ){
-        Eijiro.List_Lv1/*.shuffled()*/.subList(prop.ListIndex?.second ?: 0, 200).forEachIndexed { index, spell ->
+        Eijiro.List_Lv5/*.shuffled()*/.subList(prop.ListIndex?.second ?: 0, 200).forEachIndexed { index, spell ->
             out = "$spell : $index"
             prop.ListIndex = spell to index
 
