@@ -27,18 +27,12 @@ object Wiktionary {
 
 
         // Derived / Related のリストを抽出する
-        val dt = listOf(
-                *document.getElementsByTag("h4").toTypedArray(),
-                *document.getElementsByTag("h5").toTypedArray()
-            )
+        val dt = ( document.getElementsByTag("h4") + document.getElementsByTag("h5") )
             .firstOrNull {
                 it.child(0)?.text() == "Derived terms" &&
                 it.siblingIndex() in open.until(close)
             }
-        val rt = listOf(
-                *document.getElementsByTag("h4").toTypedArray(),
-                *document.getElementsByTag("h5").toTypedArray()
-            )
+        val rt = ( document.getElementsByTag("h4") + document.getElementsByTag("h5") )
             .firstOrNull {
                 it.child(0)?.text() == "Related terms" &&
                 it.siblingIndex() in open.until(close)

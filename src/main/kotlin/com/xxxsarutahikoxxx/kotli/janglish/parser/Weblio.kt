@@ -104,7 +104,7 @@ object Weblio {
                 .map { it.replace("\\(米国英語\\)|\\(英国英語\\)".toRegex(), "").removeSpaceSurrounding }
                 .filter { it.isNotBlank() }
                 .distinct()
-        voc.syllable = setOf(*bSyllable.toTypedArray(), *syllable.toTypedArray()).toMutableList()
+        voc.syllable =  (setOf<String>() +  bSyllable + syllable).toMutableList()
 
         // 発音記号を抽出する
         val phonetics = (it.getElementsByClass("KejjeHt").firstOrNull()?.text() ?: "")
@@ -112,7 +112,7 @@ object Weblio {
                 .map { it.replace("\\(米国英語\\)|\\(英国英語\\)".toRegex(), "").removeSpaceSurrounding }
                 .filter { it.isNotBlank() }
                 .distinct()
-        voc.phonetic = setOf(*bPhonetics.toTypedArray(), *phonetics.toTypedArray()).toMutableList()
+        voc.phonetic = (setOf<String>() + bPhonetics + phonetics).toMutableList()
 
         // 発音リソースを抽出する
         val sources = it.getElementsByTag("source").map { it.attr("src") }
@@ -358,7 +358,7 @@ object Weblio {
                                         if( s.startsWith("‐") ){
                                             val preOfC = comparative[index].split("・").run { subList(0, this.size-1) }
                                             val sufOfS = s.split("・").last()
-                                            listOf(*preOfC.toTypedArray(), sufOfS).joinToString("")
+                                            (preOfC + sufOfS).joinToString("")
                                         }else{
                                             s.replace("・", "")
                                         }
@@ -370,16 +370,8 @@ object Weblio {
                                     conjugates.putIfAbsent(Conjugation.Comparative, mutableListOf())
                                     conjugates.putIfAbsent(Conjugation.Superlative, mutableListOf())
 
-                                    conjugates[Conjugation.Comparative]?.addAll(listOf(
-                                            *cList.toTypedArray(), *comparative.toTypedArray()
-                                    ).sortedBy {
-                                        listOf(*base1.toTypedArray(), *base2.toTypedArray()).indexOf(it)
-                                    })
-                                    conjugates[Conjugation.Superlative]?.addAll(listOf(
-                                            *sList.toTypedArray(), *superlative.toTypedArray()
-                                    ).sortedBy {
-                                        listOf(*base1.toTypedArray(), *base2.toTypedArray()).indexOf(it)
-                                    })
+                                    conjugates[Conjugation.Comparative]?.addAll((cList + comparative).sortedBy { (base1 + base2).indexOf(it) })
+                                    conjugates[Conjugation.Superlative]?.addAll((sList + superlative).sortedBy { (base1 + base2).indexOf(it) })
 
                                     // 重複を除去する
                                     conjugates[Conjugation.Comparative] = conjugates[Conjugation.Comparative]!!.distinct().toMutableList()

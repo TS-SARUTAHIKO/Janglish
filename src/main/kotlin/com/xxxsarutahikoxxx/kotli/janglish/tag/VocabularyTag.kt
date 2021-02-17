@@ -15,19 +15,25 @@ abstract class VocabularyTag {
     abstract val code : String
     abstract var parentCode : String?
     abstract var name : String
+    abstract var tips : String
 
     val parentTag : VocabularyTag? get() = parentCode?.run { TagLibrary.of(this) }
     val childTags : List<VocabularyTag> get()= TagLibrary.childOf(code)
 
 
     companion object {
+        /**
+         * [code], [parent], [name] でタグとタグノードのペアを作成する
+         *
+         * 既に存在する場合はそれを返す
+         * */
         fun make(code : String, parent : String? = null, name : String) : Pair<VocabularyTag, TagNode> {
             return TagLibrary.instance(code, parent, name) to TagNodeLibrary.instance(code)
         }
     }
 }
 @Serializable
-data class VocabularyTagImpl(override val code : String, override var parentCode : String?, override var name : String) : VocabularyTag()
+data class VocabularyTagImpl(override val code : String, override var parentCode : String?, override var name : String, override var tips : String) : VocabularyTag()
 
 @Serializable
 data class TagLibrary(
@@ -72,13 +78,13 @@ data class TagLibrary(
          * [code] [parent] [name] を元にタグを検索 or 作成する
          * */
         fun instance(code : String, parent : String? = null, name : String = code) : VocabularyTag {
-            return of(code) ?: VocabularyTagImpl(code, parent, name).apply { library.tags.add(this) }
+            return of(code) ?: VocabularyTagImpl(code, parent, name, "").apply { library.tags.add(this) }
         }
         /**
-         * [tagCode] 出死体されたタグの子タグのリストを取得する
+         * [tagCode] で指定されたタグの子タグのリストを取得する
          *  */
         fun childOf(tagCode : String? = null) : List<VocabularyTag> {
-            return library.tags.filter { it.code == tagCode }
+            return library.tags.filter { it.parentTag?.code == tagCode }
         }
     }
 }

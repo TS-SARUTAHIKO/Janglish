@@ -5,6 +5,8 @@ import com.xxxsarutahikoxxx.kotli.janglish.directory.TagNodeLibrary
 import com.xxxsarutahikoxxx.kotli.janglish.parser.Weblio
 import com.xxxsarutahikoxxx.kotli.janglish.structure.*
 import com.xxxsarutahikoxxx.kotli.janglish.tag.TagLibrary
+import com.xxxsarutahikoxxx.kotli.janglish.tag.VocabularyTag
+import com.xxxsarutahikoxxx.kotli.janglish.tag.tagTemplete
 import com.xxxsarutahikoxxx.kotlin.Utilitys.getResourceAsStream
 import com.xxxsarutahikoxxx.kotlin.Utilitys.out
 import kotlinx.serialization.Serializable
@@ -53,41 +55,26 @@ internal data class Properties(
 internal val prop get() = Properties.prop
 
 fun List<String>.append(str : String) : String {
-    return listOf(*this.toTypedArray(), str).filter { it.isNotBlank() }.joinToString("\n")
+    return (this + str).filter { it.isNotBlank() }.joinToString("\n")
 }
 
 
 fun main(args: Array<String>) {
-    TagLibrary.loadLibraryCode("{\"tags\":[{\"type\":\"com.xxxsarutahikoxxx.kotli.janglish.tag.VocabularyTagImpl\",\"code\":\"human\",\"parentCode\":null,\"name\":\"人間\"},{\"type\":\"com.xxxsarutahikoxxx.kotli.janglish.tag.VocabularyTagImpl\",\"code\":\"human parts\",\"parentCode\":\"human\",\"name\":\"身体パーツ\"}]}\n")
-    TagNodeLibrary.loadLibraryCode("{\"nodes\":[{\"type\":\"com.xxxsarutahikoxxx.kotli.janglish.directory.TagNodeImpl\",\"tagCode\":\"human\",\"vocabularys\":[]},{\"type\":\"com.xxxsarutahikoxxx.kotli.janglish.directory.TagNodeImpl\",\"tagCode\":\"human parts\",\"vocabularys\":[\"sample\",\"ggg\",\"aaa\"]}]}\n")
-
-//    VocabularyTag.make("human", null, "人間")
-//    VocabularyTag.make("human parts", "human", "身体パーツ").second.apply {
-//        vocabularys.addAll(listOf("sample", "ggg", "aaa"))
-//    }
-//    out = TagLibrary.libraryCode
-//    out = TagNodeLibrary.libraryCode
-//
-//
-//
-
-
 
     val spell = when( null ) {
         1 -> "break"
-        2 -> "ballpoint"
         else -> null
     }
     if( spell == null ){
-        Eijiro.List_Lv5/*.shuffled()*/.subList(prop.ListIndex?.second ?: 0, 100).forEachIndexed { index, spell ->
-            out = "index : $spell"
+        Eijiro.List_Lv1/*.shuffled()*/.subList(prop.ListIndex?.second ?: 0, 200).forEachIndexed { index, spell ->
+            out = "$spell : $index"
             prop.ListIndex = spell to index
 
             Weblio.parse(spell).forEach { VocLibrary.add(it) ; it.println() }
             Thread.sleep(2000)
         }
         prop.ListIndex = null
-        out = VocLibrary.libraryCode
+        File("src/main/resources/weblio1_sample.txt").out = VocLibrary.libraryCode
     }else{
         Weblio
             .parse(spell!!)
