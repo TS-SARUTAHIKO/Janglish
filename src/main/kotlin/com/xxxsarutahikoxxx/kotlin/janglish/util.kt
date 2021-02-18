@@ -73,7 +73,7 @@ fun main(args: Array<String>) {
             Thread.sleep(2000)
         }
         prop.ListIndex = null
-        File("src/main/resources/weblio1_sample.txt").out = VocLibrary.libraryCode
+        File("src/main/resources/weblio5_sample.txt").out = VocLibrary.libraryCode
     }else{
         Weblio
             .parse(spell!!)

@@ -68,7 +68,7 @@ abstract class VocLibrary {
 
         fun add(voc : Vocabulary) = library.add(voc)
         fun of(spell : String) : List<Vocabulary> = library[spell]
-        fun get( condition : Condition) : List<Vocabulary> = library.get(condition)
+        fun filtered(condition : Condition) : List<Vocabulary> = library.get(condition)
     }
 }
 
@@ -76,7 +76,7 @@ abstract class VocLibrary {
  * ミキサーを用いてボキャブラリーを取得する
  * */
 fun VocLibrary( func : VocabularyMixer.()->(Condition) ) : List<Vocabulary> {
-    return VocLibrary.get(VocabularyMixer.condition(func))
+    return VocLibrary.filtered(VocabularyMixer.condition(func))
 }
 
 

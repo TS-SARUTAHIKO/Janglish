@@ -86,5 +86,19 @@ data class TagLibrary(
         fun childOf(tagCode : String? = null) : List<VocabularyTag> {
             return library.tags.filter { it.parentTag?.code == tagCode }
         }
+        /**
+         * トップレベルタグを取得する（親タグコードを持たない or 親タグが存在しない タグ）
+         * */
+        fun topLevels() = childOf(null)
+
+        /**
+         * タグを条件付けて検索する
+         * */
+        fun filtered(condition : (VocabularyTag)->(Boolean) ) : List<VocabularyTag> {
+            return library.tags.filter(condition)
+        }
     }
 }
+
+/** [TagLibrary.filtered] へのショートカット */
+fun TagLibrary( condition : (VocabularyTag)->(Boolean) ) : List<VocabularyTag> = TagLibrary.filtered(condition)
