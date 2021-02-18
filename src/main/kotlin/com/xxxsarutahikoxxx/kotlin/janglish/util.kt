@@ -1,6 +1,6 @@
 package com.xxxsarutahikoxxx.kotlin.janglish
 
-import com.xxxsarutahikoxxx.kotli.janglish.directory.TagNodeLibrary
+import com.xxxsarutahikoxxx.kotlin.Feature.TreeRoot
 import com.xxxsarutahikoxxx.kotlin.Utilitys.getResourceAsStream
 import com.xxxsarutahikoxxx.kotlin.janglish.classifier.Eijiro
 import com.xxxsarutahikoxxx.kotlin.janglish.parser.Weblio
@@ -9,7 +9,7 @@ import com.xxxsarutahikoxxx.kotlin.janglish.structure.VocLibrary
 import com.xxxsarutahikoxxx.kotlin.janglish.structure.Vocabulary
 import com.xxxsarutahikoxxx.kotlin.janglish.structure.println
 import com.xxxsarutahikoxxx.kotlin.janglish.tag.TagLibrary
-import com.xxxsarutahikoxxx.kotlin.janglish.tag.tagTemplete
+import com.xxxsarutahikoxxx.kotlin.janglish.tag.VocabularyTag
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -60,6 +60,7 @@ fun List<String>.append(str : String) : String {
 
 fun main(args: Array<String>) {
 
+
     val spell = when( null ) {
         1 -> "break"
         else -> null
@@ -92,8 +93,19 @@ fun main(args: Array<String>) {
     }
 
 
+
+
+
 //    val texts = getResourceAsStream("PhoneticSymbol.json").use {
 //        it.bufferedReader().readText()
 //    }
 //    out = Json {  }.decodeFromString<List<PhoneticSymbol>>(texts)
+}
+
+fun loadTags(){
+    getResourceAsStream("tags.txt").use {
+        it.bufferedReader().use {
+            TagLibrary.loadLibraryCode(it.readText())
+        }
+    }
 }

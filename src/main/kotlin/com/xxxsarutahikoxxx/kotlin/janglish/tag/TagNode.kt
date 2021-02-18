@@ -16,17 +16,17 @@ interface VNode
 @Serializable
 abstract class TagNode : VNode {
     abstract val tagCode : String
-    abstract val vocabularys : MutableSet<String>
+    abstract val vocabularies : MutableSet<String>
 
-    abstract val tag : VocabularyTag?
     abstract val childNodes : List<TagNode>
+
+    val tag : VocabularyTag? get() = TagLibrary.of(tagCode)
 }
 @Serializable
 data class TagNodeImpl(
     override val tagCode : String,
-    override val vocabularys : MutableSet<String> = mutableSetOf()
+    override val vocabularies : MutableSet<String> = mutableSetOf()
 ) : TagNode() {
-    override val tag : VocabularyTag? by lazy { TagLibrary.of(tagCode) }
     override val childNodes: List<TagNode> get() = tag?.childTags?.mapNotNull { TagNodeLibrary.of(it.code) } ?: listOf()
 }
 
@@ -66,5 +66,25 @@ data class TagNodeLibrary(
         fun instance(tagCode : String) : TagNode {
             return of( tagCode ) ?: TagNodeImpl(tagCode = tagCode).apply { library.nodes.add(this) }
         }
+        /**
+         * [tagCode] で指定されたタグノードの子タグノードのリストを取得する
+         *  */
+        fun childOf(tagCode : String? = null) : List<TagNode> {
+            return library.nodes.filter { it.tag?.parentTag?.code == tagCode }
+        }
+        /**
+         * トップレベルタグノードを取得する（親タグコードを持たない or 親タグが存在しない タグ）
+         * */
+        fun topLevels() = childOf(null)
+
+        /**
+         * タグを条件付けて検索する
+         * */
+        fun filtered(condition : (TagNode)->(Boolean) ) : List<TagNode> {
+            return library.nodes.filter(condition)
+        }
     }
 }
+
+/** [TagNodeLibrary.filtered] へのショートカット */
+fun TagNodeLibrary( condition : (TagNode)->(Boolean) ) : List<TagNode> = TagNodeLibrary.filtered(condition)

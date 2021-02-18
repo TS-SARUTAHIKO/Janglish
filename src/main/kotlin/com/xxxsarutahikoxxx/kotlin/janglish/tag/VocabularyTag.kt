@@ -20,6 +20,8 @@ abstract class VocabularyTag {
     val parentTag : VocabularyTag? get() = parentCode?.run { TagLibrary.of(this) }
     val childTags : List<VocabularyTag> get()= TagLibrary.childOf(code)
 
+    val tagNode : TagNode? get() = TagNodeLibrary.of(code)
+
 
     companion object {
         /**
