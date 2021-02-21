@@ -20,7 +20,7 @@ object GoogleScript {
         val ret = Json.decodeFromString<JsonObject>(content)
 
         val length = ret["length"].run { Integer.parseInt("$this") }
-        return List(length){ ret[ codes[it] ].toString() }
+        return List(length){ ret[ codes[it] ].toString().removeSurrounding("\"", "\"") }
     }
     fun toEnglish(vararg ja : String ) : List<String> {
         if( ja.isEmpty() ) return listOf()
@@ -34,6 +34,6 @@ object GoogleScript {
         val ret = Json.decodeFromString<JsonObject>(content)
 
         val length = ret["length"].run { Integer.parseInt("$this") }
-        return List(length){ ret[ codes[it] ].toString() }
+        return List(length){ ret[ codes[it] ].toString().removeSurrounding("\"", "\"") }
     }
 }
