@@ -41,7 +41,7 @@ data class PhoneticLibrary(
 
     companion object {
         private var library: PhoneticLibrary = PhoneticLibrary()
-        private val decorations = listOf('(', ')', '-', 'ˈ', 'ˌ', '‐')
+        private val decorations = listOf('(', ')', '-', 'ˈ', 'ˌ', '‐', '`')
         private val phoneticMap get() = library.phoneticMap
 
         // シリアライザーのバグ回避のための処理
