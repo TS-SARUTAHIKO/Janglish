@@ -60,38 +60,37 @@ fun List<String>.append(str : String) : String {
 
 
 fun main(args: Array<String>) {
-    PhoneticLibrary.loadDefault()
 
-    val spell = when( 1 ) {
-        1 -> "arrogant"
-        else -> null
-    }
-    if( spell == null ){
-        Eijiro.List_Lv5/*.shuffled()*/.subList(prop.ListIndex?.second ?: 0, 200).forEachIndexed { index, spell ->
-            out = "$spell : $index"
-            prop.ListIndex = spell to index
-
-            Weblio.parse(spell).forEach { VocLibrary.add(it) ; it.println() }
-            Thread.sleep(2000)
-        }
-        prop.ListIndex = null
-        File("src/main/resources/weblio5_sample.txt").out = VocLibrary.libraryCode
-    }else{
-        Weblio
-            .parse(spell!!)
-            .forEachIndexed { index : Int, it ->
-                out = "単語 : ${index+1}"
-
-                VocLibrary.add(it)
-
-                val string = Json.encodeToString(it)
-                Json.decodeFromString<Vocabulary>(string).println()
-            }
-        val code = VocLibrary.libraryCode
-        VocLibrary { prefix("break") }.forEach {
-            it.println()
-        }
-    }
+//    val spell = when( 1 ) {
+//        1 -> "arrogant"
+//        else -> null
+//    }
+//    if( spell == null ){
+//        Eijiro.List_Lv5/*.shuffled()*/.subList(prop.ListIndex?.second ?: 0, 200).forEachIndexed { index, spell ->
+//            out = "$spell : $index"
+//            prop.ListIndex = spell to index
+//
+//            Weblio.parse(spell).forEach { VocLibrary.add(it) ; it.println() }
+//            Thread.sleep(2000)
+//        }
+//        prop.ListIndex = null
+//        File("src/main/resources/weblio5_sample.txt").out = VocLibrary.libraryCode
+//    }else{
+//        Weblio
+//            .parse(spell!!)
+//            .forEachIndexed { index : Int, it ->
+//                out = "単語 : ${index+1}"
+//
+//                VocLibrary.add(it)
+//
+//                val string = Json.encodeToString(it)
+//                Json.decodeFromString<Vocabulary>(string).println()
+//            }
+//        val code = VocLibrary.libraryCode
+//        VocLibrary { prefix("break") }.forEach {
+//            it.println()
+//        }
+//    }
 }
 
 fun loadTags(){
