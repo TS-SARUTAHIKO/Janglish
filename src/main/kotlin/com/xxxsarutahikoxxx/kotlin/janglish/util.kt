@@ -6,9 +6,7 @@ import com.xxxsarutahikoxxx.kotlin.janglish.classifier.Eijiro
 import com.xxxsarutahikoxxx.kotlin.janglish.parser.Weblio
 import com.xxxsarutahikoxxx.kotlin.Utilitys.out
 import com.xxxsarutahikoxxx.kotlin.janglish.parser.GoogleScript
-import com.xxxsarutahikoxxx.kotlin.janglish.structure.VocLibrary
-import com.xxxsarutahikoxxx.kotlin.janglish.structure.Vocabulary
-import com.xxxsarutahikoxxx.kotlin.janglish.structure.println
+import com.xxxsarutahikoxxx.kotlin.janglish.structure.*
 import com.xxxsarutahikoxxx.kotlin.janglish.tag.TagLibrary
 import com.xxxsarutahikoxxx.kotlin.janglish.tag.VocabularyTag
 import kotlinx.serialization.Serializable
@@ -17,6 +15,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.jsoup.Jsoup
 import java.io.*
+import kotlin.time.measureTime
 
 
 @Serializable
@@ -61,9 +60,10 @@ fun List<String>.append(str : String) : String {
 
 
 fun main(args: Array<String>) {
+    PhoneticLibrary.loadDefault()
 
     val spell = when( 1 ) {
-        1 -> "prospect"
+        1 -> "arrogant"
         else -> null
     }
     if( spell == null ){
@@ -92,15 +92,6 @@ fun main(args: Array<String>) {
             it.println()
         }
     }
-
-
-
-
-
-//    val texts = getResourceAsStream("PhoneticSymbol.json").use {
-//        it.bufferedReader().readText()
-//    }
-//    out = Json {  }.decodeFromString<List<PhoneticSymbol>>(texts)
 }
 
 fun loadTags(){

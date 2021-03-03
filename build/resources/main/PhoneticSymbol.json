@@ -1,336 +1,288 @@
 [
   {
-    "symbol":"iː",
-    "subSymbol":"íː",
+    "symbols":["iː","íː","ɪː","íː"],
     "howToPronounce":"唇を横に引っぱり、舌を緊張させて「イー」と強めに長く発音する。［ː］の印は長く引っ張って発音する。",
     "tips":"綴りは「ea」や「ee」で表すことが多いが、「he」や「piece」などのように「e」「ie」も［iː］と発音することがある",
     "examples":["eat","me","chief"]
   },
   {
-    "symbol":"i",
-    "subSymbol":"í",
+    "symbols":["i","í","ɪ","í"],
     "howToPronounce":"日本語の「イ」と「エ」の中間の音。唇と舌は緊張させずに、日本語の「エ」の口の形で「イ」と発音する。",
     "tips":"綴りは「i」で表すことが多いが、「busy」や「pocket」などのように「u」「y」「e」も［i］と発音することがある。",
     "examples":["it","except","build"]
   },
   {
-    "symbol":"e",
-    "subSymbol":"é",
+    "symbols":["e","é","ɛ"],
     "howToPronounce":"日本語の「エ」に近い発音。ただし、日本語の「エ」よりも若干下顎を下げて、口を開けて発音する。",
     "tips":"綴りは「e」で表すことが多いが、「many」「pay」などの「a」、「said」などの「ai」、「says」などの「ay」、「friend」などの「ie」、「dead」などの「ea」も［e］と発音することがある。",
     "examples":["egg","head","says"]
   },
   {
-    "symbol":"æ",
-    "subSymbol":"ǽ",
+    "symbols":["æ","ǽ"],
     "howToPronounce":"［a］と［e］がつながっていることに注意。口を広めに開けて、唇を左右に思い切って引っぱり「ア」と「エ」を同時に言う感じで発音する。",
     "tips":"綴りは「a」で表す。",
     "examples":["apple","cat","happy"]
   },
   {
-    "symbol":"ɑ",
-    "subSymbol":"ά",
+    "symbols":["ɑ","ά","ɒ"],
     "howToPronounce":"唇を左右に開かずに、しかし日本語の「ア」よりも口を大きく開け、喉の奥の方から「ア」と発音する。",
     "tips":"綴りは「o」で表すことが多いが、「want」「swan」などの「a」も［ɑ］と発音することがある。",
     "examples":["box","hot","want"]
   },
   {
-    "symbol":"ɑː",
-    "subSymbol":"άː",
+    "symbols":["ɑː","άː"],
     "howToPronounce":"唇を左右に開かずに、しかし日本語の「ア」よりも口を大きく開け、喉の奥の方から「アー」と強めに長く発音する［ː］の印は長く引っ張って発音する。",
     "tips":"綴りは「a」「au」「al」などがある。",
     "examples":["calm","father","palm"]
   },
   {
-    "symbol":"ʌ",
-    "subSymbol":"ʌ́",
+    "symbols":["ʌ","ʌ́"],
     "howToPronounce":"日本語の「ア」に近い発音。ただし、日本語の「ア」よりも若干口を狭く開き、短く喉の奥の方で「アッ」と発音する。",
     "tips":"綴りは「u」で表すことが多いが、「none」「cousin」「blood」など、「o」「ou」「oo」で表すことがある。",
     "examples":["but","come","country"]
   },
   {
-    "symbol":"ɔ",
-    "subSymbol":"ɔ́",
+    "symbols":["ɔ","ɔ́"],
     "howToPronounce":"日本語の「オ」よりも口を縦に大きくあけ、唇をまるくして前に出すようにし、日本語の「オ」と「ア」の中間の音を、やや伸ばして「オー」と発音する。",
     "tips":"綴りは「o」で表すことが多いが、「cough」など「ou」で表すことがある。",
     "examples":["cost","loss","off"]
   },
   {
-    "symbol":"ɔː",
-    "subSymbol":"ɔ́ː",
+    "symbols":["ɔː","ɔ́ː"],
     "howToPronounce":"日本語の「オ」よりも口を縦に大きくあけ、唇をまるくして前に出すようにし、日本語の「オ」と「ア」の中間の音を、のどの奥の方に力を入れて伸ばしながら「オー」と発音する。［ː］の印は長く引っ張って発音する。",
     "tips":"綴りは、「a」「al」「au」「aw」「augh」「ough」などで表される。",
     "examples":["all","author","bought"]
   },
   {
-    "symbol":"u",
-    "subSymbol":"ú",
+    "symbols":["u","ú","ʊ"],
     "howToPronounce":"唇をまるくして前に突き出し、日本語の「ウ」を発音する時より若干口の奥を広く開け、日本語の「オ」を言うつもりで、短く「ウ」と発音する。",
     "tips":"綴りは「bush」などの「u」、「book」などの「oo」、「could」などの「oul」などで表す。",
     "examples":["full","cook","could"]
   },
   {
-    "symbol":"uː",
-    "subSymbol":"úː",
+    "symbols":["uː","úː"],
     "howToPronounce":"唇をまるくして前に突き出しながら「ウー」と長めに発音する。日本語の「ウー」に近いが、日本語の「ウー」よりも唇をまるくして前に突き出す。［ː］の印は長く引っ張って発音する。",
     "tips":"綴りは「u」「ue」「ui」「o」「oe」「ou」「oo」「ew」「wo」などで表される。",
     "examples":["blue","do","few"]
   },
   {
-    "symbol":"ə",
-    "subSymbol":"ə́",
+    "symbols":["ə","ə́"],
     "howToPronounce":"口を狭く開け、舌など口の中をリラックスさせて、「ア」と「ウ」の中間の音をあいまいに発音する。",
     "tips":"あいまい母音。「schwa (シュワ)」とも呼ばれる。\n綴りは「a」「e」「i」「u」「o」などで表される。これらの綴りの場合で、アクセントがない時に［ə］と発音されることが多い。",
     "examples":["about","correct","suppose"]
   },
   {
-    "symbol":"ei",
-    "subSymbol":"éi",
+    "symbols":["ei","éi","eɪ","éɪ"],
     "howToPronounce":"二重母音。/e/ は、日本語の「エ」よりも若干下顎を下げて、口を開けて発音する。［i］は日本語の「イ」で良い。［e］を強く長く、［i］を弱く短く発音するようにし、つづけて「エーィ」と発音する。「エ」「イ」と別々に発音しない。",
     "tips":"「able」や「break」など、「エーブル」「ブレーク」の様に発音せず、「エーィブル」「ブレーィク」の様に［ei］と発音する様に注意する。\n綴りは「a」「ai」「ay」「ea」「eigh」「ey」などで表される。",
     "examples":["able","break","eight"]
   },
   {
-    "symbol":"ai",
-    "subSymbol":"ái",
+    "symbols":["ai","ái","aɪ","áɪ"],
     "howToPronounce":"二重母音。［a］は、日本語の「ア」より口を大きく開け、強く若干長めに発音し、 つづけて［i］は、口を狭くしながら軽く添えるように、「アーィ」と発音する。「ア」「イ」と別々に発音しない。",
     "tips":"綴りは「i」「ie」「ig」「igh」「y」「uy」「eye」などで表される。",
     "examples":["bite","buy","cry"]
   },
   {
-    "symbol":"ɔi",
-    "subSymbol":"ɔ́i",
+    "symbols":["ɔi","ɔ́i","ɔɪ","ɔ́ɪ"],
     "howToPronounce":"二重母音。［ɔ］は、日本語の「オ」よりも口を縦に大きくあけ、唇をまるくして前に出すようにし、日本語の「オ」と「ア」の中間の音を、やや伸ばして「オー」と発音し、つづけて［i］は、口を狭くしながら軽く添えるように、「オーィ」と発音する。「オ」「イ」と別々に発音しない。",
     "tips":"綴りは「oi」「oy」などで表される。",
     "examples":["boil","boy","choice"]
   },
   {
-    "symbol":"au",
-    "subSymbol":"áu",
+    "symbols":["au","áu","aʊ","áʊ"],
     "howToPronounce":"二重母音。［a］は、日本語の「ア」より口を大きく開け、強く若干長めに発音し、つづけて［u］は、唇をまるくして前に突き出しながら、軽く添えるように、「アーゥ」と発音する。「ア」「ウ」と別々に発音しない。",
     "tips":"綴りは「ou」「ow」などで表される。",
     "examples":["cloud","cow","down"]
   },
   {
-    "symbol":"ou",
-    "subSymbol":"óu",
+    "symbols":["ou","óu","oʊ","óʊ"],
     "howToPronounce":"二重母音。唇を少し丸めて、日本語の「オ」と「ア」の中間のような音を、強く若干長めに発音し、つづけて ［u］は、唇をまるくして前に突き出しながら、軽く添えるように、「オーゥ」と発音する。「オ」「ウ」と別々に発音しない。",
     "tips":"「go」や「open」など、「ゴー」「オープン」の様に［ɔː］と発音せず、「ゴーゥ」「オーゥプン」の様に［ou］と発音する様に注意する。\n綴りは「o」「oa」「ow」などで表される。",
     "examples":["no","boat","slow"]
   },
   {
-    "symbol":"ər",
-    "subSymbol":"ə́r",
+    "symbols":["ər","ə́r","ɚ"],
     "howToPronounce":"口は広く開けないで、舌全体を奥に丸める様にして、弱く「ア」と発音する。舌を丸める際、舌を上アゴに触れない様にすること。",
     "tips":"綴りは「er」「ar」「or」「re」「ure」「ier」などで表される。",
     "examples":["other","author","measure"]
   },
   {
-    "symbol":"iər",
-    "subSymbol":"íər",
+    "symbols":["iər","íər","ɪɚ"],
     "howToPronounce":"唇を横に引っぱり、舌を緊張させて「イ」と強めに発音し、つづけて［ər］は、口は広く開けないで、舌全体を奥に丸める様にして、軽く添えるように「イーア」と発音する。舌を丸める際、舌を上アゴに触れない様にすること。「イ」「ア」と別々に発音しない。",
     "tips":"綴りは「eer」「ear」「ier」「ere」などで表される。",
     "examples":["ar","clear","here"]
   },
   {
-    "symbol":"eər",
-    "subSymbol":"éər",
+    "symbols":["eər","éər","ɛɚ"],
     "howToPronounce":"日本語の「エ」よりも口を開けて「エ」と強めに発音し、つづけて［ər］は、口は広く開けないで、舌全体を奥に丸める様にして、軽く添えるように「エーア」と発音する。舌を丸める際、舌を上アゴに触れない様にすること。「エ」「ア」と別々に発音しない。",
     "tips":"綴りは「air」「are」「ar」「ear」「ere」などで表される。",
     "examples":["air","care","bear"]
   },
   {
-    "symbol":"uər",
-    "subSymbol":"úər",
+    "symbols":["uər","úər","ʊɚ"],
     "howToPronounce":"唇をまるくして前に突き出し、日本語の「ウ」を発音する時より若干口の奥を広く開け、日本語の「オ」を言うつもりで「ウ」と強めに発音し、つづけて［ər］は、口は広く開けないで、舌全体を奥に丸める様にして、軽く添えるように「ウーア」と発音する。舌を丸める際、舌を上アゴに触れない様にすること。「ウ」「ア」と別々に発音しない。",
     "tips":"綴りは「ure」「oor」「our」「ear」などで表される。",
     "examples":["cure","poor","your"]
   },
   {
-    "symbol":"əːr",
-    "subSymbol":"ə́ːr",
+    "symbols":["əːr","ə́ːr","ɚː"],
     "howToPronounce":"口は広く開けないで、舌全体を奥に丸める様にして、長めに発音する。［ː］の印は長く引っ張って発音する。舌を丸める際、舌を上アゴに触れない様にすること。",
     "tips":"綴りは「er」「ir」「or」「ur」「ear」などで表される。",
     "examples":["her","hurt","earth"]
   },
   {
-    "symbol":"ɑːr",
-    "subSymbol":"άːr",
+    "symbols":["ɑːr","άːr","ɑɚ"],
     "howToPronounce":"日本語の「ア」よりも縦に口を大きく開け、喉の奥の方から「アー」と長めに発音し、つづけて［r］は、舌を上アゴに触れない様に奥に丸めて、付け足す様に発音する。［ː］の印は長く引っ張って発音する。",
     "tips":"綴りは「ar」「are」「ear」などで表される。",
     "examples":["are","arm","heart"]
   },
   {
-    "symbol":"ɔːr",
-    "subSymbol":"ɔ́ːr",
+    "symbols":["ɔːr","ɔ́ːr","ɔɚ"],
     "howToPronounce":"日本語の「オ」よりも口を縦に大きくあけ、唇をまるくして前に出すようにし、日本語の「オ」と「ア」の中間の音を、のどの奥の方に力を入れて伸ばしながら「オー」と発音し、つづけて［r］は、舌を上アゴに触れない様に奥に丸めて、付け足す様に発音する。［ː］の印は長く引っ張って発音する。",
     "tips":"綴りは「or」「our」「oor」「ar」などで表される。",
     "examples":["born","court","door"]
   },
   {
-    "symbol":"p",
-    "subSymbol":null,
+    "symbols":["p"],
     "howToPronounce":"唇を閉じ息をためてから、急に唇を開け、パッと破裂させる感じで「息」を出す。日本語の「パ」行よりも、強めに破裂させる。\n［p］音が語の終わりにきた場合は、声を出さずに、強く破裂させすぎないように注意する。（例えば cup［kʌ́p］）",
     "tips":"破裂させるときに「声」を出すと［b］の音になる。（例えば book［búk］）\n綴りは「p」「pp」で表される。",
     "examples":["put","copy","top"]
   },
   {
-    "symbol":"b",
-    "subSymbol":null,
+    "symbols":["b"],
     "howToPronounce":"唇を閉じ息をためてから、急に唇を開け、パッと破裂させる感じで「声」を出す。日本語の「バ」行よりも、強めに破裂させる。\n［b］音が語の終わりにきた場合は、強く声を出しすぎないように注意する。（例えば job［dʒɑ́b］）",
     "tips":"破裂させるときに「息」を出すと［p］の音になる。（例えば pan［pǽn］）\n綴りは「b」「bb」で表される。",
     "examples":["big","habit","pub"]
   },
   {
-    "symbol":"t",
-    "subSymbol":null,
+    "symbols":["t"],
     "howToPronounce":"唇は閉じずに、舌の前方を上の歯茎につけて息を止め、急に舌を離すと同時に「息」を出し破裂させる。日本語の「タ」行よりも、強めに破裂させる。",
     "tips":"破裂させるときに「声」を出すと［d］の音になる。（例えば dog［dɔ́(ː)g］）\nput［pút］の様に［t］音が語の終わりにきた場合、破裂させないこともある。\nwater［wɔ́ːtər］などの様に［t］音を破裂させずに、［l］に近い発音［wɔ́ːlər］になることもある（米語）。\n綴りは「t」「tt」で表される。",
     "examples":["ten","button","get"]
   },
   {
-    "symbol":"d",
-    "subSymbol":null,
+    "symbols":["d"],
     "howToPronounce":"唇は閉じずに、舌の前方を上の歯茎につけて息を止め、急に舌を離すと同時に「声」を出し破裂させる。日本語の「ダ」行よりも、強めに破裂させる。",
     "tips":"破裂させるときに「息」を出すと［t］の音になる。（例えば bet［bét］）\n［d］音が語の終わりにきた場合、破裂させないこともある。\n綴りは「d」「dd」で表される。",
     "examples":["day","did","ladder"]
   },
   {
-    "symbol":"k",
-    "subSymbol":null,
+    "symbols":["k"],
     "howToPronounce":"唇は閉じずに、舌の後方を上の上あごにつけて息を止め、急に舌を離すと同時に「息」を出し破裂させる。日本語の「カ」行よりも、強めに破裂させる。",
     "tips":"破裂させるときに「声」を出すと［g］の音になる。（例えば bag［bǽg］）\n［k］音が語の終わりにきた場合、短く軽く「いき」を出す。（例えば ink［íŋk］）\n綴りは「k」「c」「ck」で表される。",
     "examples":["car","lucky","back"]
   },
   {
-    "symbol":"g",
-    "subSymbol":null,
+    "symbols":["g"],
     "howToPronounce":"唇は閉じずに、舌の後方を上の上あごにつけて息を止め、急に舌を離すと同時に「声」を出し破裂させる。日本語の「ガ」行よりも、強めに破裂させる。",
     "tips":"破裂させるときに「息」を出すと［k］の音になる。（例えば cake［kéik］）\n［g］音が語の終わりにきた場合、短く軽く「声」を出す。（例えば bag［bǽg］）\n綴りは「g」「gg」で表される。",
     "examples":["get","pig","struggle"]
   },
   {
-    "symbol":"f",
-    "subSymbol":null,
+    "symbols":["f"],
     "howToPronounce":"下唇の内側に上の歯を軽く当て、その隙間から摩擦させるように「息」を出す。日本語にはない発音。",
     "tips":"下唇と上の歯の隙間から「声」を出すと［v］の音になる。\n綴りは「f」「ff」「gh」「ph」で表される。",
     "examples":["coffee","laugh","nephew"]
   },
   {
-    "symbol":"v",
-    "subSymbol":null,
+    "symbols":["v"],
     "howToPronounce":"下唇の内側に上の歯を軽く当て、その隙間から摩擦させるように「声」を出す。日本語にはない発音。",
     "tips":"下唇と上の歯の隙間から「息」を出すと［f］の音になる。（例えば fan［fǽn］）\n綴りは「v」「f」で表される。",
     "examples":["visit","seven","give"]
   },
   {
-    "symbol":"θ",
-    "subSymbol":null,
+    "symbols":["θ"],
     "howToPronounce":"上の歯の先に舌先を軽く当て、その隙間から摩擦させるように弱く「息」を出す。日本語にはない発音。",
     "tips":"上の歯の先と舌先の隙間から「声」を出すと［ð］の音になる。（例えば other［ʌ́ðər］）\n綴りは「th」で表される。",
     "examples":["thank","author","both"]
   },
   {
-    "symbol":"ð",
-    "subSymbol":null,
+    "symbols":["ð"],
     "howToPronounce":"上の歯の先に舌先を軽く当て、その隙間から摩擦させるように弱く「声」を出す。日本語にはない発音。",
     "tips":"上の歯の先と舌先の隙間から「息」を出すと［θ］の音になる。（例えば birth［bə́ːrθ］）\n綴りは「th」で表される。",
     "examples":["that","other","with"]
   },
   {
-    "symbol":"s",
-    "subSymbol":null,
+    "symbols":["s"],
     "howToPronounce":"舌先を少し前の方に出して歯茎に近づけて、隙間から「息」を出して「スー」と発音する。日本語の「サ」行よりも強めに息を出す。",
     "tips":"隙間から「声」を出すと［z］の音になる。（例えば has ［həz］）\n綴りは「s」「ss」「c」で表される。",
     "examples":["set","cease","mister"]
   },
   {
-    "symbol":"z",
-    "subSymbol":null,
+    "symbols":["z"],
     "howToPronounce":"舌先を少し前の方に出して歯茎に近づけて、隙間から「声」を出して「ズー」と発音する。日本語の「ザ」行よりも強めに息を出す。",
     "tips":"隙間から「息」を出すと［s］の音になる。（例えば case ［kéis］）\n綴りは「s」「z」で表される。",
     "examples":["zero","music","rose"]
   },
   {
-    "symbol":"ʃ",
-    "subSymbol":null,
+    "symbols":["ʃ"],
     "howToPronounce":"唇を丸めて前に突き出し、舌先を歯茎に近づけて、隙間から「息」を出して「シュ」と発音する。日本語の「シ」に似た発音。",
     "tips":"唇を丸くして前に突き出し、舌先と歯茎の隙間から「声」を出すと［ʒ］の音になる。（例えば casual［kǽʒuəl］）\n綴りは「sh」「ch」「ce」「ti」「s」などで表される。",
     "examples":["shop","machine","cash"]
   },
   {
-    "symbol":"ʒ",
-    "subSymbol":null,
+    "symbols":["ʒ"],
     "howToPronounce":"唇を丸めて前に突き出し、舌先を歯茎に近づけて、隙間から「声」を出して「ジュ」と発音する。日本語の「ジ」に似た発音。",
     "tips":"唇を丸くして前に突き出し、舌先と歯茎の隙間から「息」を出すと［ʃ］の音になる。（例えば cash［kǽʃ］）\n綴りは「s」「g」「z」などで表される。",
     "examples":["casual","usual","rouge"]
   },
   {
-    "symbol":"h",
-    "subSymbol":null,
+    "symbols":["h"],
     "howToPronounce":"のどの奥を広く開けて、勢いよく「息」出し発音する。日本語の「ハ」行に似た音。 ",
     "tips":"綴りは「h」「wh」などで表される。",
     "examples":["he","behind","who"]
   },
   {
-    "symbol":"tʃ",
-    "subSymbol":null,
+    "symbols":["tʃ"],
     "howToPronounce":"唇を少し丸めて前に出し、舌先を上顎につけて、それを離すと同時に「息」を出し「チュ」と発音する。",
     "tips":"上顎につけた舌先を話すときに「声」を出すと［dʒ］の音になる。（例えば jump［dʒʌ́mp］）\n綴りは「ch」「tch」で表される。",
     "examples":["chair","teacher","match"]
   },
   {
-    "symbol":"dʒ",
-    "subSymbol":null,
+    "symbols":["dʒ"],
     "howToPronounce":"唇を少し丸めて前に出し、舌先を上顎につけて、それを離すと同時に「声」を出し「ヂュ」と発音する。",
     "tips":"上顎につけた舌先を話すときに「息」を出すと［tʃ］の音になる。（例えば chance［tʃǽns］）\n綴りは「dg」「g」「j」で表される。",
     "examples":["jet","engine","bridge"]
   },
   {
-    "symbol":"m",
-    "subSymbol":null,
+    "symbols":["m"],
     "howToPronounce":"唇を閉じ、口からは息や声を出さずに、鼻を通して「ンー」と発音する。後に母音が伴わない場合や、語末に［m］がきた場合は、唇をしっかりと閉じたまま「ン」と発音する。",
     "tips":"綴りは「m」「mm」などで表される。",
     "examples":["map","summer","room"]
   },
   {
-    "symbol":"n",
-    "subSymbol":null,
+    "symbols":["n"],
     "howToPronounce":"口を軽く開け、舌先を上アゴにあてて、口からは息を出さずに、鼻を通して声を出し「ンー」と発音する。語末に［n］がきた場合は、舌先を上アゴにしっかりとつけて、口から息も声も漏れないように「ン」と発音する。",
     "tips":"綴りは「n」「nn」で表される。",
     "examples":["near","dinner","pen"]
   },
   {
-    "symbol":"ŋ",
-    "subSymbol":null,
+    "symbols":["ŋ"],
     "howToPronounce":"舌の奥を上アゴにあてて、口からは息を出さずに、鼻を通して声を出して「ング」のように発音するする、語末に［ŋ］がくる場合以外は、「グ」は発音せず「ン」に近い音になる。\n語末に［ŋ］がきた場合も、日本語の「グ」の様にはっきりとは発音しない。舌の奥を上アゴにあてて鼻を通して声を出し、その後、その舌を離すと軽い「グ」の音が出る。",
     "tips":"綴りは「ng」「n」で表される。",
     "examples":["anger","young","trunk"]
   },
   {
-    "symbol":"j",
-    "subSymbol":null,
+    "symbols":["j"],
     "howToPronounce":"舌先のちょっと後ろを上アゴに近づけて、その間から「イー」と言いながら声を出す。日本語の「ユ」と「イ」の間の音に近い。",
     "tips":"ローマ字読みの「ジェイ」の音とは全く異なる発音。\n綴りは「y」の他に、「u」「ew」「eau」も［j］の発音。",
     "examples":["you","cute","few"]
   },
   {
-    "symbol":"w",
-    "subSymbol":null,
+    "symbols":["w"],
     "howToPronounce":"唇を丸めて前に突き出し、それを緩めながら「ウ」と声を出す。",
     "tips":"綴りは「w」の他に、「wh」や、時には「u」も［w］と発音する。",
     "examples":["we","sweet","what"]
   },
   {
-    "symbol":"r",
-    "subSymbol":null,
+    "symbols":["r"],
     "howToPronounce":"唇を丸めて若干前に突き出し、舌先を上アゴにつけずに内側に巻くようにしながら「ウ」と声を出す。日本語にはない発音。\n舌先が上アゴについてしまうと［l］の発音に近くなるので注意。日本語の「ラ」は［r］と［l］の中間。",
     "tips":"綴りは「r」「wr」 などで表される。",
     "examples":["right","free","wrong"]
   },
   {
-    "symbol":"l",
-    "subSymbol":null,
+    "symbols":["l"],
     "howToPronounce":"母音の前と語頭では、舌先を、上の前歯と歯茎の境目につけたまま舌の両側から声を出してから、舌先を下方に弾くように発音する。子音の前や語末では、舌先を、上の前歯と歯茎の境目を目指して伸ばすようにし、「ウ」と「オ」の中間の声を出す。日本語にはない発音。",
     "tips":"日本語の「ラ」は［r］と［l］の中間。\n綴りは「l」「ll」「le」で表す。",
     "examples":["light","valley","feel"]
