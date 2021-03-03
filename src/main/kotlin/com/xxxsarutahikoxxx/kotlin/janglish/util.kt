@@ -61,9 +61,10 @@ fun List<String>.append(str : String) : String {
 
 fun main(args: Array<String>) {
     PhoneticLibrary.loadDefault()
+    out = PhoneticLibrary.libraryCode
 
     val spell = when( 1 ) {
-        1 -> "dresser"
+        1 -> "theater"
         else -> null
     }
     if( spell == null ){
